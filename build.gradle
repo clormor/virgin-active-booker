@@ -1,0 +1,15 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.seleniumhq.selenium:selenium-java:2.40.0'
+	compile 'commons-cli:commons-cli:1.2'    
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.8'
+}
