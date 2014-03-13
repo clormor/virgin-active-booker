@@ -1,4 +1,4 @@
-package com.clormor.vcb;
+package com.clormor.vab;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;

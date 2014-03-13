@@ -1,4 +1,4 @@
-package com.clormor.vcb;
+package com.clormor.vab;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
