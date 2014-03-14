@@ -6,6 +6,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.joda.time.DateTime;
 
 public class VirginActiveCli {
 
@@ -57,7 +58,7 @@ public class VirginActiveCli {
 		String username = cmd.getOptionValue('u');
 		String password = cmd.getOptionValue('p');
 		TennisCourtViewer tcv = new TennisCourtViewer(username, password);
-		tcv.printAvailableCourts();
+		tcv.printAvailableCourts(DateTime.now().plusDays(1));
 	}
 	
 	private void printHelpMessage() {
