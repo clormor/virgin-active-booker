@@ -86,5 +86,19 @@ public class TennisBookingModelTest {
 		assertEquals(2, testModel.getMatchingCourts(Arrays.asList("1", "A"), null, null).size());
 		// court a, b, c mixed case
 		assertEquals(3, testModel.getMatchingCourts(Arrays.asList("a", "A", "B", "c"), null, null).size());
+		// empty list (all courts)
+		assertEquals(TOTAL_NUM_COURTS, testModel.getMatchingCourts(new ArrayList<String>(), null, null).size());
+		// empty string (no courts)
+		assertEquals(0, testModel.getMatchingCourts(Arrays.asList(""), null, null).size());
+	}
+	
+	@Test
+	public void testCourtMatchCombos() {
+		// all inside courts
+		assertEquals(6, testModel.getMatchingCourts(new ArrayList<String>(), Arrays.asList(Surface.values()), Arrays.asList(true)).size());
+		// court a is not inside
+		assertEquals(0, testModel.getMatchingCourts(Arrays.asList("a"), null, Arrays.asList(true)).size());
+		// court a is not inside
+		assertEquals(2, testModel.getMatchingCourts(null, Arrays.asList(Surface.HARD), Arrays.asList(false)).size());
 	}
 }
