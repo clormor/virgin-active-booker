@@ -1,5 +1,6 @@
 package com.clormor.vab.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -7,9 +8,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.clormor.vab.model.TennisBookingModel;
+import com.clormor.vab.model.TennisCourt;
 import com.clormor.vab.model.VirginActiveBookingDate;
+import com.google.common.base.Function;
 
 public class VirginActiveCliBookingController {
 
@@ -62,14 +66,24 @@ public class VirginActiveCliBookingController {
 		return waitForElement(By.id(hourOfDayRadioButtonId));
 	}
 
-	public List<WebElement> getAvailableCourts(int hourOfDay) {
-		WebElement hourOfDayButton = getElementForBookingTime(hourOfDay);
-		hourOfDayButton.click();
+	public List<TennisCourt> getAvailableCourts() {
+		List<TennisCourt> courts = new ArrayList<TennisCourt>();
 
-		Select availableCourtsSelect = new Select(
-				waitForElement(By.id("alb_5")));
+		Select courtsSelectElement = new Select(waitForElement(By.id("alb_5")));
 
-		return availableCourtsSelect.getOptions();
+		for (WebElement courtElement : courtsSelectElement.getOptions()) {
+			String courtName = courtElement.getText();
+			String lastChar = courtName.substring(courtName.length() - 1,
+					courtName.length());
+
+			for (TennisCourt court : TennisCourt.values()) {
+				if (court.getName().equalsIgnoreCase(lastChar)) {
+					courts.add(court);
+				}
+			}
+		}
+
+		return courts;
 	}
 
 	/**
@@ -77,46 +91,41 @@ public class VirginActiveCliBookingController {
 	 * sort of like a Wait For Ajax method.
 	 */
 	public WebElement waitForElement(By by) {
-		int attempts = 0;
-		int size = driver.findElements(by).size();
+		// times out after 2 seconds
+		WebDriverWait wait = new WebDriverWait(driver, 2);
 
-		while (size == 0) {
-			size = driver.findElements(by).size();
-			if (attempts == 3) {
-				throw new RuntimeException(String.format(
-						"Could not find %s after %d seconds", by.toString(), 3));
-			}
-			attempts++;
-			try {
-				Thread.sleep(1000); // sleep for 1 second.
-			} catch (Exception x) {
-				throw new RuntimeException(
-						"Failed due to an exception during Thread.sleep!", x);
-			}
+		try {
+			wait.until(presenceOfElementLocated(by));
+			return driver.findElement(by);
+		} catch (Exception e) {
+			return null;
 		}
-
-		if (size > 1)
-			System.err.println("WARN: There are more than 1 " + by.toString()
-					+ " 's!");
-
-		return driver.findElement(by);
 	}
 
-	public String prettyPrintCourts(List<WebElement> courts) {
-		if (courts == null || courts.size() == 0) {
-			return "no available courts";
+	public String printAvailableCourts(int hourOfDay) {
+		StringBuilder message = new StringBuilder();
+		message.append(hourOfDay).append(":00\t--> ");
+
+		WebElement hourOfDayButton = getElementForBookingTime(hourOfDay);
+
+		if (hourOfDayButton == null) {
+			message.append("not available\n");
+			return message.toString();
 		}
 
-		StringBuilder message = new StringBuilder();
+		try {
+			hourOfDayButton.click();
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// do nothing
+		}
 
-		for (WebElement court : courts) {
-			String courtName = court.getText();
-			message.append(courtName.substring(courtName.length() - 1,
-					courtName.length()));
-			message.append(", ");
+		for (TennisCourt court : getAvailableCourts()) {
+			message.append(court.getName()).append(", ");
 		}
 
 		message.deleteCharAt(message.lastIndexOf(", "));
+		message.append("\n");
 		return message.toString();
 	}
 
@@ -151,5 +160,19 @@ public class VirginActiveCliBookingController {
 
 		WebElement proceedStep3Button = waitForElement(By.id("rpProceed_b"));
 		proceedStep3Button.click();
+	}
+
+	private static Function<WebDriver, WebElement> presenceOfElementLocated(
+			final By locator) {
+		return new Function<WebDriver, WebElement>() {
+			@Override
+			public WebElement apply(WebDriver driver) {
+				try {
+					return driver.findElement(locator);
+				} catch (Exception e) {
+					return null;
+				}
+			}
+		};
 	}
 }

@@ -1,9 +1,6 @@
 package com.clormor.vab;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.clormor.vab.controller.VirginActiveCliBookingController;
@@ -28,10 +25,7 @@ public class TennisCourtViewer {
 
 		StringBuilder message = new StringBuilder();
 		for (int hourOfDay = VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME; hourOfDay <= VirginActiveConstants.LATEST_COURT_BOOKING_TIME; hourOfDay++) {
-			message.append(hourOfDay).append(":00 --> ");
-			List<WebElement> availableCourts = controller.getAvailableCourts(hourOfDay);
-			message.append(controller.prettyPrintCourts(availableCourts));
-			message.append("\n");
+			message.append(controller.printAvailableCourts(hourOfDay));
 		}
 
 		System.out.println(message);
