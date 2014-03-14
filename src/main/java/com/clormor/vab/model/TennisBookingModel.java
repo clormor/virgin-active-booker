@@ -41,7 +41,7 @@ public class TennisBookingModel {
 			
 			// filter name
 			if (names != null && names.size() > 0) {
-				if (!names.contains(court.getName())) {
+				if (! (names.contains(court.getName()) || names.contains(court.getName().toLowerCase()))) {
 					matchingCourts.remove(court);
 				}
 			}

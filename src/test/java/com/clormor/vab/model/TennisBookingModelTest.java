@@ -82,5 +82,9 @@ public class TennisBookingModelTest {
 	public void testCourtNameMatch() {
 		// court 1
 		assertEquals(1, testModel.getMatchingCourts(Arrays.asList("1"), null, null).size());
+		// court 1 or court A
+		assertEquals(2, testModel.getMatchingCourts(Arrays.asList("1", "A"), null, null).size());
+		// court a, b, c mixed case
+		assertEquals(3, testModel.getMatchingCourts(Arrays.asList("a", "A", "B", "c"), null, null).size());
 	}
 }
