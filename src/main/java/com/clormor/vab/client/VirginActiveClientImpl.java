@@ -21,8 +21,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 	}
 
 	final Options options;
-	String username;
-	String password;
+	CommandLine command;
 	int date;
 
 	public VirginActiveClientImpl() {
@@ -80,11 +79,13 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 			}
 		}
 
-		username = cmd.getOptionValue("username");
-		password = cmd.getOptionValue("password");
+		command = cmd;
 	}
 
 	public void run() {
+		String username = command.getOptionValue("username");
+		String password = command.getOptionValue("password");
+
 		TennisCourtViewer view = new TennisCourtViewer(username, password);
 		view.printAvailableCourts(DateTime.now().plusDays(1));
 	}
