@@ -22,8 +22,14 @@ public class VirginActiveClientTest {
 	}
 	
 	@Test (expected = ParseException.class)
-	public void parseViewAndList() throws ParseException {
+	public void parseBookAndList() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-list", "-book"};
+		testCli.processArgs(args);
+	}
+	
+	@Test (expected = ParseException.class)
+	public void parseNoBookOrList() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever"};
 		testCli.processArgs(args);
 	}
 	

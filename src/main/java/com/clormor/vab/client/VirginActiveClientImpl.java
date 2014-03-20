@@ -52,6 +52,10 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		if (cmd.hasOption("list") && cmd.hasOption("book")) {
 			throw new ParseException ("Must specify one of book or list");
 		}
+
+		if (! cmd.hasOption("list") && ! cmd.hasOption("book")) {
+			throw new ParseException ("Must specify one of book or list");
+		}
 		
 		username = cmd.getOptionValue("username");
 		password = cmd.getOptionValue("password");
