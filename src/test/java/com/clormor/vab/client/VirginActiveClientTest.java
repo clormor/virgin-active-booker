@@ -72,5 +72,26 @@ public class VirginActiveClientTest {
 		assertFalse(((TestClientImpl) testCli).listed);
 		assertFalse(((TestClientImpl) testCli).booked);
 	}
+
+	@Test
+	public void listCallsList() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-l"};
+		testCli.processArgs(args);
+		testCli.run();
+		
+		assertFalse(((TestClientImpl) testCli).helpDisplayed);
+		assertTrue(((TestClientImpl) testCli).listed);
+		assertFalse(((TestClientImpl) testCli).booked);		
+	}
 	
+	@Test
+	public void bookCallsBook() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book"};
+		testCli.processArgs(args);
+		testCli.run();
+		
+		assertFalse(((TestClientImpl) testCli).helpDisplayed);
+		assertFalse(((TestClientImpl) testCli).listed);
+		assertTrue(((TestClientImpl) testCli).booked);		
+	}
 }
