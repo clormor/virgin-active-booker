@@ -1,9 +1,10 @@
 package com.clormor.vab.client;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.cli.ParseException;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertTrue;
 
 public class VirginActiveClientTest {
 
@@ -11,7 +12,7 @@ public class VirginActiveClientTest {
 	
 	@Before
 	public void setup() {
-		testCli = new VirginActiveClientImpl();
+		testCli = new TestClientImpl();
 	}
 	
 	@Test (expected = ParseException.class)
@@ -36,7 +37,7 @@ public class VirginActiveClientTest {
 	public void defaultDate() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-list"};
 		testCli.processArgs(args);
-		assertTrue(testCli.date == 0);
+		assertEquals(testCli.getRelativeDate(),0);
 	}
 
 	@Test (expected = ParseException.class)

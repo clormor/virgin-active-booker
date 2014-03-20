@@ -22,7 +22,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 
 	final Options options;
 	CommandLine command;
-	int date;
+	public int date;
 
 	public VirginActiveClientImpl() {
 		options = new Options();
@@ -85,14 +85,18 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 	public void run() {
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
-
+		
 		TennisCourtViewer view = new TennisCourtViewer(username, password);
 		view.printAvailableCourts(DateTime.now().plusDays(1));
 	}
 
-	private void printHelpMessage() {
+	void printHelpMessage() {
 		HelpFormatter formatter;
 		formatter = new HelpFormatter();
 		formatter.printHelp("virginActive", options);
+	}
+	
+	int getRelativeDate() {
+		return date;
 	}
 }
