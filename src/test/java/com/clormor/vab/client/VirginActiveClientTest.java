@@ -1,6 +1,8 @@
 package com.clormor.vab.client;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.apache.commons.cli.ParseException;
 import org.junit.Before;
@@ -50,5 +52,16 @@ public class VirginActiveClientTest {
 	public void dateOutOfRange() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-list", "-d", "9"};
 		testCli.processArgs(args);
-	}	
+	}
+	
+	@Test
+	public void helpCalledOnly() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-list", "-help"};
+		testCli.processArgs(args);
+		testCli.run();
+		
+		assertTrue(((TestClientImpl) testCli).helpDisplayed);
+		assertFalse(((TestClientImpl) testCli).listed);
+		assertFalse(((TestClientImpl) testCli).booked);
+	}
 }
