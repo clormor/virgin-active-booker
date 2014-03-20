@@ -1,4 +1,4 @@
-package com.clormor.vab;
+package com.clormor.vab.view;
 
 import org.joda.time.DateTime;
 import org.openqa.selenium.firefox.FirefoxDriver;
