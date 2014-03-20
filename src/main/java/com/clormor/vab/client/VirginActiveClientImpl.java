@@ -66,12 +66,15 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 			throw new ParseException("Must specify one of book or list");
 		}
 
-		// assign default date
+		// verify date - assign default if necessary
 		if (!cmd.hasOption("d")) {
 			date = 0;
 		} else {
 			try {
 				date = Integer.parseInt(cmd.getOptionValue('d'));
+				if (date < 0 || date > VirginActiveConstants.MAX_BOOK_AHEAD_DAY) {
+					throw new ParseException("value for date must be a number between 0 and " + VirginActiveConstants.MAX_BOOK_AHEAD_DAY);
+				}
 			} catch (NumberFormatException e) {
 				throw new ParseException("value for date must be a number between 0 and " + VirginActiveConstants.MAX_BOOK_AHEAD_DAY);
 			}

@@ -44,4 +44,10 @@ public class VirginActiveClientTest {
 		String[] args = {"-u", "me", "-p", "whatever", "-list", "-d", "blah"};
 		testCli.processArgs(args);
 	}
+	
+	@Test (expected = ParseException.class)
+	public void dateOutOfRange() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-list", "-d", "9"};
+		testCli.processArgs(args);
+	}	
 }
