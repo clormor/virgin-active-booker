@@ -56,7 +56,7 @@ public class VirginActiveClientTest {
 	
 	@Test
 	public void helpCalledOnly() throws ParseException {
-		String[] args = {"-u", "me", "-p", "whatever", "-list", "-help"};
+		String[] args = {"-u", "me", "-p", "whatever", "-b", "-help"};
 		testCli.processArgs(args);
 		testCli.run();
 		
