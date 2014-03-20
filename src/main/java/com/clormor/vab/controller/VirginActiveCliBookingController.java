@@ -102,6 +102,34 @@ public class VirginActiveCliBookingController {
 		}
 	}
 
+	public boolean bookCourt(int hourOfDay) {
+		WebElement hourOfDayButton = getElementForBookingTime(hourOfDay);
+		
+		if (hourOfDayButton == null) {
+			return false;
+		}
+		
+		try {
+			hourOfDayButton.click();
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// do nothing
+		}
+		
+		WebElement proceedStep4Button = waitForElement(By.id("rpProceed_b"));
+		proceedStep4Button.click();
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// do nothing
+		}
+		
+		WebElement confirmButton = waitForElement(By.id("rpProceed_b"));
+//		confirmButton.click();
+		return true;
+	}
+	
 	public String printAvailableCourts(int hourOfDay) {
 		StringBuilder message = new StringBuilder();
 		message.append(hourOfDay).append(":00\t--> ");

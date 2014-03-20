@@ -28,8 +28,25 @@ public class TennisCourtViewer {
 			message.append(controller.printAvailableCourts(hourOfDay));
 		}
 
-		System.out.println(message);
 		controller.logout();
+		System.out.println(message);
 	}
 
+	public void bookCourts(DateTime date, int hourOfDay) {
+		controller.login(username, password);
+
+		controller.newCourtBooking(date);
+		
+		StringBuilder message = new StringBuilder();
+		boolean success = controller.bookCourt(hourOfDay);
+		
+		if (success) {
+			message.append("a court has been booked!");
+		} else {
+			message.append("no court available");
+		}
+		
+		controller.logout();
+		System.out.println(message);
+	}
 }
