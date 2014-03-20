@@ -9,6 +9,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.joda.time.DateTime;
 
+import com.clormor.vab.model.VirginActiveConstants;
 import com.clormor.vab.view.TennisCourtViewer;
 
 public class VirginActiveClientImpl implements VirginActiveClient {
@@ -22,12 +23,19 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 	final Options options;
 	String username;
 	String password;
+	int date;
 
 	public VirginActiveClientImpl() {
 		options = new Options();
 		options.addOption("list", false, "list available sessions/courts");
 		options.addOption("book", false, "book a session/court");
 		options.addOption("help", false, "print this help message");
+
+		Option date = new Option("d", "date", true,
+				"the date (relative to today's date). Must be between 0 and "
+						+ VirginActiveConstants.MAX_BOOK_AHEAD_DAY
+						+ " (default: 0)");
+		date.setArgName("date");
 
 		Option username = new Option("u", "username", true,
 				"you member's portal username");
@@ -41,6 +49,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 
 		options.addOption(username);
 		options.addOption(password);
+		options.addOption(date);
 	}
 
 	public void processArgs(String[] args) throws ParseException {
@@ -50,13 +59,24 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		cmd = parser.parse(options, args);
 
 		if (cmd.hasOption("list") && cmd.hasOption("book")) {
-			throw new ParseException ("Must specify one of book or list");
+			throw new ParseException("Must specify one of book or list");
 		}
 
-		if (! cmd.hasOption("list") && ! cmd.hasOption("book")) {
-			throw new ParseException ("Must specify one of book or list");
+		if (!cmd.hasOption("list") && !cmd.hasOption("book")) {
+			throw new ParseException("Must specify one of book or list");
 		}
-		
+
+		// assign default date
+		if (!cmd.hasOption("d")) {
+			date = 0;
+		} else {
+			try {
+				date = Integer.parseInt(cmd.getOptionValue('d'));
+			} catch (NumberFormatException e) {
+				throw new ParseException("value for date must be a number between 0 and " + VirginActiveConstants.MAX_BOOK_AHEAD_DAY);
+			}
+		}
+
 		username = cmd.getOptionValue("username");
 		password = cmd.getOptionValue("password");
 	}
