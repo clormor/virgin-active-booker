@@ -26,9 +26,9 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 
 	public VirginActiveClientImpl() {
 		options = new Options();
-		options.addOption("list", false, "list available sessions/courts");
 		options.addOption("book", false, "book a session/court");
 		
+		Option list = new Option("l", "list", false, "list available courts");
 		Option help = new Option("h", "help", false, "print this help message");
 
 		Option date = new Option("d", "date", true,
@@ -51,6 +51,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		options.addOption(password);
 		options.addOption(date);
 		options.addOption(help);
+		options.addOption(list);
 	}
 
 	public void processArgs(String[] args) throws ParseException {

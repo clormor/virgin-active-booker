@@ -37,7 +37,7 @@ public class VirginActiveClientTest {
 	
 	@Test
 	public void defaultDate() throws ParseException {
-		String[] args = {"-u", "me", "-p", "whatever", "-list"};
+		String[] args = {"-u", "me", "-p", "whatever", "-l"};
 		testCli.processArgs(args);
 		assertEquals(testCli.getRelativeDate(),0);
 	}
@@ -72,4 +72,5 @@ public class VirginActiveClientTest {
 		assertFalse(((TestClientImpl) testCli).listed);
 		assertFalse(((TestClientImpl) testCli).booked);
 	}
+	
 }
