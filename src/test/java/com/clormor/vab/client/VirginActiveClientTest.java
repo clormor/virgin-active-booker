@@ -63,5 +63,13 @@ public class VirginActiveClientTest {
 		assertTrue(((TestClientImpl) testCli).helpDisplayed);
 		assertFalse(((TestClientImpl) testCli).listed);
 		assertFalse(((TestClientImpl) testCli).booked);
+		
+		String[] args2 = {"-u", "me", "-p", "whatever", "-list", "-h"};
+		testCli.processArgs(args2);
+		testCli.run();
+		
+		assertTrue(((TestClientImpl) testCli).helpDisplayed);
+		assertFalse(((TestClientImpl) testCli).listed);
+		assertFalse(((TestClientImpl) testCli).booked);
 	}
 }
