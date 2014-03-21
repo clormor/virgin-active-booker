@@ -113,6 +113,7 @@ public class HtmlUnitController {
 			// do nothing
 		}
 
+		//TODO figure out how to get HtmlUnit to find the dynamically-loaded select input
 		currentPage = (HtmlPage) currentPage.refresh();
 		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage.getElementById("alb_5");
 
