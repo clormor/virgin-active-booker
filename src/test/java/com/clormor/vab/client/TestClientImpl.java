@@ -7,7 +7,7 @@ public class TestClientImpl extends VirginActiveClientImpl {
 	boolean booked = false;
 	
 	@Override
-	void printHelpMessage() {
+	public void printHelpMessage() {
 		helpDisplayed = true;
 	}
 	

@@ -14,9 +14,17 @@ import com.clormor.vab.view.TennisCourtViewer;
 
 public class VirginActiveClientImpl implements VirginActiveClient {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 		VirginActiveClient clientImpl = new VirginActiveClientImpl();
-		clientImpl.processArgs(args);
+		
+		try {
+			clientImpl.processArgs(args);
+		} catch (ParseException e) {
+			System.out.println(e.getMessage());
+			clientImpl.printHelpMessage();
+			System.exit(1);
+		}
+		
 		clientImpl.run();
 	}
 
@@ -139,10 +147,10 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay);
 	}
 	
-	void printHelpMessage() {
+	public void printHelpMessage() {
 		HelpFormatter formatter;
 		formatter = new HelpFormatter();
-		formatter.printHelp("virginActive", options);
+		formatter.printHelp("virgin-active-booker", options);
 	}
 	
 	int getRelativeDate() {

@@ -8,4 +8,5 @@ public interface VirginActiveClient {
 	
 	void run();
 	
+	void printHelpMessage();
 }
