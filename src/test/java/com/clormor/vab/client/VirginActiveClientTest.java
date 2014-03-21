@@ -56,7 +56,7 @@ public class VirginActiveClientTest {
 	
 	@Test
 	public void helpCalledOnly() throws ParseException {
-		String[] args = {"-u", "me", "-p", "whatever", "-b", "-help"};
+		String[] args = {"-u", "me", "-p", "whatever", "-b", "-help", "-t", "20"};
 		testCli.processArgs(args);
 		testCli.run();
 		
@@ -64,7 +64,7 @@ public class VirginActiveClientTest {
 		assertFalse(((TestClientImpl) testCli).listed);
 		assertFalse(((TestClientImpl) testCli).booked);
 		
-		String[] args2 = {"-u", "me", "-p", "whatever", "-list", "-h"};
+		String[] args2 = {"-u", "me", "-p", "whatever", "-list", "-h", "-t", "20"};
 		testCli.processArgs(args2);
 		testCli.run();
 		
@@ -86,12 +86,18 @@ public class VirginActiveClientTest {
 	
 	@Test
 	public void bookCallsBook() throws ParseException {
-		String[] args = {"-u", "me", "-p", "whatever", "-book"};
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "19"};
 		testCli.processArgs(args);
 		testCli.run();
 		
 		assertFalse(((TestClientImpl) testCli).helpDisplayed);
 		assertFalse(((TestClientImpl) testCli).listed);
 		assertTrue(((TestClientImpl) testCli).booked);		
+	}
+	
+	@Test (expected = ParseException.class)
+	public void bookNoTime() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book"};
+		testCli.processArgs(args);
 	}
 }

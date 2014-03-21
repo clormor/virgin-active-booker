@@ -27,10 +27,13 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 	public VirginActiveClientImpl() {
 		options = new Options();
 		
-		Option book = new Option("b", "book", false, "book courts§");
+		Option book = new Option("b", "book", false, "book courts");
 		Option list = new Option("l", "list", false, "list available courts");
 		Option help = new Option("h", "help", false, "print this help message");
 
+		Option time = new Option("t", "time", true, "hour of day to list or book courts (24-hour format)");
+		time.setArgName("time");
+		
 		Option date = new Option("d", "date", true,
 				"the date (relative to today's date). Must be between 0 and "
 						+ VirginActiveConstants.MAX_BOOK_AHEAD_DAY
@@ -53,6 +56,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		options.addOption(help);
 		options.addOption(list);
 		options.addOption(book);
+		options.addOption(time);
 	}
 
 	public void processArgs(String[] args) throws ParseException {
@@ -67,6 +71,10 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 
 		if (!cmd.hasOption("list") && !cmd.hasOption("book")) {
 			throw new ParseException("Must specify one of book or list");
+		}
+		
+		if (cmd.hasOption("book") && !cmd.hasOption("time")) {
+			throw new ParseException("Must specify a time to book");
 		}
 
 		// verify date - assign default if necessary
