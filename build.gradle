@@ -1,9 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'application'
 
 repositories {
 	mavenCentral()
 }
+
+mainClassName = "com.clormor.vab.client.VirginActiveClientImpl"
 
 dependencies {
 	compile 'org.seleniumhq.selenium:selenium-java:2.40.0'
