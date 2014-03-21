@@ -6,7 +6,7 @@ public interface IVirginCLI {
 
 	void processArgs(String[] args) throws ParseException;
 	
-	void run();
+	void run() throws Exception;
 	
 	void printHelpMessage();
 }
