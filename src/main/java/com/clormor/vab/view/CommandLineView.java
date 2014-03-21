@@ -1,27 +1,29 @@
 package com.clormor.vab.view;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 
 import org.joda.time.DateTime;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
-import com.clormor.vab.controller.SeleniumController;
-import com.clormor.vab.model.VirginTennisCourt;
+import com.clormor.vab.controller.HtmlUnitController;
 import com.clormor.vab.model.VirginConstants;
+import com.clormor.vab.model.VirginTennisCourt;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 
 public class CommandLineView {
 
 	private final String username;
 	private final String password;
-	private final SeleniumController controller;
+	private final HtmlUnitController controller;
 
 	public CommandLineView(String username, String password) {
 		this.username = username;
 		this.password = password;
-		controller = new SeleniumController(new FirefoxDriver());
+		controller = new HtmlUnitController();
 	}
 
-	public void printAvailableCourts(DateTime date) {
+	public void printAvailableCourts(DateTime date) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
 		controller.login(username, password);
 
 		controller.newCourtBooking(date);
@@ -37,7 +39,7 @@ public class CommandLineView {
 		System.out.println(message);
 	}
 
-	public void bookCourts(DateTime date, int hourOfDay) {
+	public void bookCourts(DateTime date, int hourOfDay) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
 		controller.login(username, password);
 
 		controller.newCourtBooking(date);

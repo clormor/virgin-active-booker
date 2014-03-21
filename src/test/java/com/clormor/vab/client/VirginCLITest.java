@@ -4,9 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import org.apache.commons.cli.ParseException;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 
 public class VirginCLITest {
 
@@ -55,7 +60,7 @@ public class VirginCLITest {
 	}
 	
 	@Test
-	public void helpCalledOnly() throws ParseException {
+	public void helpCalledOnly() throws ParseException, FailingHttpStatusCodeException, MalformedURLException, IOException {
 		String[] args = {"-u", "me", "-p", "whatever", "-b", "-help", "-t", "20"};
 		testCli.processArgs(args);
 		testCli.run();
@@ -74,7 +79,7 @@ public class VirginCLITest {
 	}
 
 	@Test
-	public void listCallsList() throws ParseException {
+	public void listCallsList() throws ParseException, FailingHttpStatusCodeException, MalformedURLException, IOException {
 		String[] args = {"-u", "me", "-p", "whatever", "-l"};
 		testCli.processArgs(args);
 		testCli.run();
@@ -85,7 +90,7 @@ public class VirginCLITest {
 	}
 	
 	@Test
-	public void bookCallsBook() throws ParseException {
+	public void bookCallsBook() throws ParseException, FailingHttpStatusCodeException, MalformedURLException, IOException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "19"};
 		testCli.processArgs(args);
 		testCli.run();

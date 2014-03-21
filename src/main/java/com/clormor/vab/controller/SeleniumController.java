@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.clormor.vab.model.VirginConstants;
 import com.clormor.vab.model.VirginModel;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.clormor.vab.model.VirginBookingDate;
@@ -168,7 +169,7 @@ public class SeleniumController {
 	}
 
 	public void login(String username, String password) {
-		driver.get("https://memberportal.esporta.com/");
+		driver.get(VirginConstants.VIRGIN_PORTAL_URL);
 
 		WebElement usernameElement = waitForElement(By.name("edUsername"));
 		WebElement passwordElement = waitForElement(By.name("edPassword"));
