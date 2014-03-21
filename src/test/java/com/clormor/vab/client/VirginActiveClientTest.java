@@ -100,4 +100,10 @@ public class VirginActiveClientTest {
 		String[] args = {"-u", "me", "-p", "whatever", "-book"};
 		testCli.processArgs(args);
 	}
+	
+	@Test (expected=ParseException.class)
+	public void timeOutOfRange() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "23"};
+		testCli.processArgs(args);
+	}
 }

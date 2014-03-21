@@ -76,6 +76,13 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		if (cmd.hasOption("book") && !cmd.hasOption("time")) {
 			throw new ParseException("Must specify a time to book");
 		}
+		
+		if (cmd.hasOption("time")) {
+			int hourOfDay = Integer.parseInt(cmd.getOptionValue('t'));
+			if (hourOfDay < VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME || hourOfDay > VirginActiveConstants.LATEST_COURT_BOOKING_TIME) {
+				throw new ParseException("value for time must be between " + VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME + " and " + VirginActiveConstants.LATEST_COURT_BOOKING_TIME);
+			}
+		}
 
 		// verify date - assign default if necessary
 		if (!cmd.hasOption("d")) {
