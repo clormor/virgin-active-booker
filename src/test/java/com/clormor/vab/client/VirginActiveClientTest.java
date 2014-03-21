@@ -106,4 +106,10 @@ public class VirginActiveClientTest {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "23"};
 		testCli.processArgs(args);
 	}
+	
+	@Test (expected=ParseException.class)
+	public void timeNaN() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "blah"};
+		testCli.processArgs(args);
+	}
 }

@@ -78,8 +78,13 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		}
 		
 		if (cmd.hasOption("time")) {
-			int hourOfDay = Integer.parseInt(cmd.getOptionValue('t'));
-			if (hourOfDay < VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME || hourOfDay > VirginActiveConstants.LATEST_COURT_BOOKING_TIME) {
+			try {
+				int hourOfDay = Integer.parseInt(cmd.getOptionValue('t'));
+				if (hourOfDay < VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME || hourOfDay > VirginActiveConstants.LATEST_COURT_BOOKING_TIME) {
+					throw new ParseException("value for time must be between " + VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME + " and " + VirginActiveConstants.LATEST_COURT_BOOKING_TIME);
+				}
+			}
+			catch (NumberFormatException e) {
 				throw new ParseException("value for time must be between " + VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME + " and " + VirginActiveConstants.LATEST_COURT_BOOKING_TIME);
 			}
 		}
@@ -128,8 +133,10 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 	void bookCourts() {
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
+		int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
+
 		TennisCourtViewer view = new TennisCourtViewer(username, password);
-		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), 19);
+		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay);
 	}
 	
 	void printHelpMessage() {
