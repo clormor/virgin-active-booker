@@ -25,7 +25,7 @@ public class SeleniumController {
 		model = new VirginModel();
 	}
 
-	public WebElement getElementForBookingDate(DateTime date) {
+	WebElement getElementForBookingDate(DateTime date) {
 		VirginBookingDate bookingDate = model.getBookingDate(date);
 		By condition = null;
 
@@ -61,12 +61,12 @@ public class SeleniumController {
 		return waitForElement(condition);
 	}
 
-	public WebElement getElementForBookingTime(int hourOfDay) {
+	WebElement getElementForBookingTime(int hourOfDay) {
 		String hourOfDayRadioButtonId = "rb_" + hourOfDay + "_0";
 		return waitForElement(By.id(hourOfDayRadioButtonId));
 	}
 
-	public List<VirginTennisCourt> getAvailableCourts() {
+	List<VirginTennisCourt> getAvailableCourts() {
 		List<VirginTennisCourt> courts = new ArrayList<VirginTennisCourt>();
 
 		Select courtsSelectElement = new Select(waitForElement(By.id("alb_5")));
@@ -78,7 +78,7 @@ public class SeleniumController {
 		return courts;
 	}
 
-	private VirginTennisCourt getCourtFromElement(WebElement courtElement) {
+	VirginTennisCourt getCourtFromElement(WebElement courtElement) {
 		String courtName = courtElement.getText();
 		String lastChar = courtName.substring(courtName.length() - 1,
 				courtName.length());
@@ -96,7 +96,7 @@ public class SeleniumController {
 	 * Private method that acts as an arbiter of implicit timeouts of sorts..
 	 * sort of like a Wait For Ajax method.
 	 */
-	public WebElement waitForElement(By by) {
+	WebElement waitForElement(By by) {
 		// times out after 2 seconds
 		WebDriverWait wait = new WebDriverWait(driver, 2);
 
@@ -200,7 +200,7 @@ public class SeleniumController {
 		proceedStep3Button.click();
 	}
 
-	private static Function<WebDriver, WebElement> presenceOfElementLocated(
+	static Function<WebDriver, WebElement> presenceOfElementLocated(
 			final By locator) {
 		return new Function<WebDriver, WebElement>() {
 			@Override
