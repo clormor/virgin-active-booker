@@ -48,8 +48,7 @@ public class TennisCourtViewer {
 		DateTime bookingTime = date.plusHours(hourOfDay);
 		if (court != null) {
 			message.append("Court ").append(court.getName()).append(" has been booked at ");
-			message.append(new SimpleDateFormat("h:mm a, z").format(bookingTime.toDate()));
-			message.append(" on ");
+			message.append(hourOfDay).append(":00 on ");
 			message.append(new SimpleDateFormat("EEE, MMM d").format(bookingTime.toDate()));
 		} else {
 			message.append("no court available");
