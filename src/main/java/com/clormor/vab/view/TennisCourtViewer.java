@@ -1,5 +1,7 @@
 package com.clormor.vab.view;
 
+import java.text.SimpleDateFormat;
+
 import org.joda.time.DateTime;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -24,6 +26,8 @@ public class TennisCourtViewer {
 		controller.newCourtBooking(date);
 
 		StringBuilder message = new StringBuilder();
+		message.append(new SimpleDateFormat("EEE, MMM d").format(date.toDate()));
+		message.append("\n--------------------------------\n");
 		for (int hourOfDay = VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME; hourOfDay <= VirginActiveConstants.LATEST_COURT_BOOKING_TIME; hourOfDay++) {
 			message.append(controller.printAvailableCourts(hourOfDay));
 		}

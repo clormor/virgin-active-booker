@@ -114,7 +114,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
 		TennisCourtViewer view = new TennisCourtViewer(username, password);
-		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), 21);
+		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), 19);
 	}
 	
 	void printHelpMessage() {
