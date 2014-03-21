@@ -5,20 +5,20 @@ import java.text.SimpleDateFormat;
 import org.joda.time.DateTime;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-import com.clormor.vab.controller.VirginActiveCliBookingController;
-import com.clormor.vab.model.TennisCourt;
-import com.clormor.vab.model.VirginActiveConstants;
+import com.clormor.vab.controller.SeleniumController;
+import com.clormor.vab.model.VirginTennisCourt;
+import com.clormor.vab.model.VirginConstants;
 
-public class TennisCourtViewer {
+public class CommandLineView {
 
 	private final String username;
 	private final String password;
-	private final VirginActiveCliBookingController controller;
+	private final SeleniumController controller;
 
-	public TennisCourtViewer(String username, String password) {
+	public CommandLineView(String username, String password) {
 		this.username = username;
 		this.password = password;
-		controller = new VirginActiveCliBookingController(new FirefoxDriver());
+		controller = new SeleniumController(new FirefoxDriver());
 	}
 
 	public void printAvailableCourts(DateTime date) {
@@ -29,7 +29,7 @@ public class TennisCourtViewer {
 		StringBuilder message = new StringBuilder();
 		message.append(new SimpleDateFormat("EEE, MMM d").format(date.toDate()));
 		message.append("\n--------------------------------\n");
-		for (int hourOfDay = VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME; hourOfDay <= VirginActiveConstants.LATEST_COURT_BOOKING_TIME; hourOfDay++) {
+		for (int hourOfDay = VirginConstants.EARLIEST_COURT_BOOKING_TIME; hourOfDay <= VirginConstants.LATEST_COURT_BOOKING_TIME; hourOfDay++) {
 			message.append(controller.printAvailableCourts(hourOfDay));
 		}
 
@@ -43,7 +43,7 @@ public class TennisCourtViewer {
 		controller.newCourtBooking(date);
 		
 		StringBuilder message = new StringBuilder();
-		TennisCourt court = controller.bookCourt(hourOfDay);
+		VirginTennisCourt court = controller.bookCourt(hourOfDay);
 		
 		DateTime bookingTime = date.plusHours(hourOfDay);
 		if (court != null) {
