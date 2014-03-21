@@ -1,6 +1,6 @@
 package com.clormor.vab.client;
 
-public class TestClientImpl extends VirginActiveClientImpl {
+public class TestCLI extends VirginCLI {
 
 	boolean helpDisplayed = false;
 	boolean listed = false;

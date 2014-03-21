@@ -10,27 +10,27 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.clormor.vab.model.TennisCourt.Surface;
+import com.clormor.vab.model.VirginTennisCourt.Surface;
 
-public class TennisBookingModelTest {
+public class VirginModelTest {
 
-	private static final int TOTAL_NUM_COURTS = TennisCourt.values().length;
+	private static final int TOTAL_NUM_COURTS = VirginTennisCourt.values().length;
 	
-	private TennisBookingModel testModel;
+	private VirginModel testModel;
 	
 	@Before
 	public void setup() {
-		testModel = new TennisBookingModel();
+		testModel = new VirginModel();
 	}
 	
 	@Test
 	public void testTodaysDate() {
-		assertEquals(VirginActiveBookingDate.TODAY, testModel.getBookingDate(DateTime.now()));
+		assertEquals(VirginBookingDate.TODAY, testModel.getBookingDate(DateTime.now()));
 	}
 	
 	@Test
 	public void testTomorrowsDate() {
-		assertEquals(VirginActiveBookingDate.TODAY_PLUS_1, testModel.getBookingDate(DateTime.now().plusDays(1)));
+		assertEquals(VirginBookingDate.TODAY_PLUS_1, testModel.getBookingDate(DateTime.now().plusDays(1)));
 	}
 	
 	@Test
@@ -40,7 +40,7 @@ public class TennisBookingModelTest {
 
 	@Test
 	public void testMaxRangeDate() {
-		assertEquals(VirginActiveBookingDate.TODAY_PLUS_7, testModel.getBookingDate(DateTime.now().plusDays(7)));
+		assertEquals(VirginBookingDate.TODAY_PLUS_7, testModel.getBookingDate(DateTime.now().plusDays(7)));
 	}
 	
 	@Test

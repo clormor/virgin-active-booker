@@ -7,23 +7,23 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
-import com.clormor.vab.model.TennisCourt.Surface;
+import com.clormor.vab.model.VirginTennisCourt.Surface;
 
-public class TennisBookingModel {
+public class VirginModel {
 
-	public VirginActiveBookingDate getBookingDate(DateTime date) {
+	public VirginBookingDate getBookingDate(DateTime date) {
 		DateTime current = DateTime.now().withTimeAtStartOfDay();
 		DateTime requestedDate = date.withTimeAtStartOfDay();
 		Days daysBetween = Days.daysBetween(current, requestedDate);
 
-		return VirginActiveBookingDate.getBookingDate(daysBetween.getDays());
+		return VirginBookingDate.getBookingDate(daysBetween.getDays());
 	}
 
-	public Collection<TennisCourt> getMatchingCourts(List<String> names,
+	public Collection<VirginTennisCourt> getMatchingCourts(List<String> names,
 			List<Surface> surfaces, List<Boolean> environment) {
-		Collection<TennisCourt> matchingCourts = EnumSet.copyOf(TennisCourt.all);
+		Collection<VirginTennisCourt> matchingCourts = EnumSet.copyOf(VirginTennisCourt.all);
 
-		for (TennisCourt court : matchingCourts) {
+		for (VirginTennisCourt court : matchingCourts) {
 			
 			// filter out indoor/outdoor
 			if (environment != null && environment.size() > 0) {

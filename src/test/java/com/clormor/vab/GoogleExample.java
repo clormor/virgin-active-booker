@@ -1,5 +1,8 @@
 package com.clormor.vab;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,23 +10,28 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlDivision;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
+
 /**
  * <p>
- * Not a unit test - a simple example copied from the selenium documentation <a
- * href=
- * "http://docs.seleniumhq.org/docs/03_webdriver.jsp#webdriver-and-the-selenium-server"
- * >here</a> - useful for reference
- * </p>
- * 
- * <p>
- * Run the <code>main()</code> method.
+ * Contains examples on how to use the web client libraries in use on this project.
  * </p>
  * 
  * @author clormor
  * 
  */
 public class GoogleExample {
-	public static void main(String[] args) {
+	
+	public static void main(String [] args) throws Exception {
+		htmlUnitExample();
+	}
+	
+	static void seleniumExample() {
 		// Create a new instance of the Firefox driver
 		// Notice that the remainder of the code relies on the interface,
 		// not the implementation.
@@ -58,5 +66,23 @@ public class GoogleExample {
 
 		// Close the browser
 		driver.quit();
+	}
+
+	static void htmlUnitExample() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+		WebClient webClient = new WebClient();
+		HtmlPage page = webClient.getPage("http://www.google.com");
+
+		HtmlInput searchBox = page.getElementByName("q");
+		searchBox.setValueAttribute("htmlunit");
+
+		HtmlSubmitInput googleSearchSubmitButton = page
+				.getElementByName("btnG"); // sometimes it's "btnK"
+		page = googleSearchSubmitButton.click();
+
+		HtmlDivision resultStatsDiv = page
+				.getFirstByXPath("//div[@id='resultStats']");
+
+		System.out.println(resultStatsDiv.asText()); // About 301,000 results
+		webClient.closeAllWindows();
 	}
 }

@@ -3,9 +3,9 @@ package com.clormor.vab.controller;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VirginActiveCliBookingControllerTest {
+public class SeleniumControllerTest {
 
-	private VirginActiveCliBookingController testController;
+	private SeleniumController testController;
 	
 	@Before
 	public void setup() {

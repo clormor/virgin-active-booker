@@ -10,23 +10,23 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.clormor.vab.model.TennisBookingModel;
-import com.clormor.vab.model.TennisCourt;
-import com.clormor.vab.model.VirginActiveBookingDate;
+import com.clormor.vab.model.VirginModel;
+import com.clormor.vab.model.VirginTennisCourt;
+import com.clormor.vab.model.VirginBookingDate;
 import com.google.common.base.Function;
 
-public class VirginActiveCliBookingController {
+public class SeleniumController {
 
-	private final TennisBookingModel model;
+	private final VirginModel model;
 	private final WebDriver driver;
 
-	public VirginActiveCliBookingController(WebDriver driver) {
+	public SeleniumController(WebDriver driver) {
 		this.driver = driver;
-		model = new TennisBookingModel();
+		model = new VirginModel();
 	}
 
 	public WebElement getElementForBookingDate(DateTime date) {
-		VirginActiveBookingDate bookingDate = model.getBookingDate(date);
+		VirginBookingDate bookingDate = model.getBookingDate(date);
 		By condition = null;
 
 		switch (bookingDate) {
@@ -66,8 +66,8 @@ public class VirginActiveCliBookingController {
 		return waitForElement(By.id(hourOfDayRadioButtonId));
 	}
 
-	public List<TennisCourt> getAvailableCourts() {
-		List<TennisCourt> courts = new ArrayList<TennisCourt>();
+	public List<VirginTennisCourt> getAvailableCourts() {
+		List<VirginTennisCourt> courts = new ArrayList<VirginTennisCourt>();
 
 		Select courtsSelectElement = new Select(waitForElement(By.id("alb_5")));
 
@@ -78,12 +78,12 @@ public class VirginActiveCliBookingController {
 		return courts;
 	}
 
-	private TennisCourt getCourtFromElement(WebElement courtElement) {
+	private VirginTennisCourt getCourtFromElement(WebElement courtElement) {
 		String courtName = courtElement.getText();
 		String lastChar = courtName.substring(courtName.length() - 1,
 				courtName.length());
 
-		for (TennisCourt court : TennisCourt.values()) {
+		for (VirginTennisCourt court : VirginTennisCourt.values()) {
 			if (court.getName().equalsIgnoreCase(lastChar)) {
 				return court;
 			}
@@ -108,7 +108,7 @@ public class VirginActiveCliBookingController {
 		}
 	}
 
-	public TennisCourt bookCourt(int hourOfDay) {
+	public VirginTennisCourt bookCourt(int hourOfDay) {
 		WebElement hourOfDayButton = getElementForBookingTime(hourOfDay);
 		
 		if (hourOfDayButton == null) {
@@ -124,7 +124,7 @@ public class VirginActiveCliBookingController {
 		
 		Select courtsSelectElement = new Select(waitForElement(By.id("alb_5")));
 		WebElement bookedCourtElement = courtsSelectElement.getFirstSelectedOption();
-		TennisCourt result = getCourtFromElement(bookedCourtElement);
+		VirginTennisCourt result = getCourtFromElement(bookedCourtElement);
 		
 		WebElement proceedStep4Button = waitForElement(By.id("rpProceed_b"));
 		proceedStep4Button.click();
@@ -158,7 +158,7 @@ public class VirginActiveCliBookingController {
 			// do nothing
 		}
 
-		for (TennisCourt court : getAvailableCourts()) {
+		for (VirginTennisCourt court : getAvailableCourts()) {
 			message.append(court.getName()).append(", ");
 		}
 

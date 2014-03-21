@@ -9,13 +9,13 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.joda.time.DateTime;
 
-import com.clormor.vab.model.VirginActiveConstants;
-import com.clormor.vab.view.TennisCourtViewer;
+import com.clormor.vab.model.VirginConstants;
+import com.clormor.vab.view.CommandLineView;
 
-public class VirginActiveClientImpl implements VirginActiveClient {
+public class VirginCLI implements IVirginCLI {
 
 	public static void main(String[] args) {
-		VirginActiveClient clientImpl = new VirginActiveClientImpl();
+		IVirginCLI clientImpl = new VirginCLI();
 		
 		try {
 			clientImpl.processArgs(args);
@@ -32,7 +32,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 	CommandLine command;
 	public int date;
 
-	public VirginActiveClientImpl() {
+	public VirginCLI() {
 		options = new Options();
 		
 		Option book = new Option("b", "book", false, "book courts");
@@ -44,7 +44,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		
 		Option date = new Option("d", "date", true,
 				"the date (relative to today's date). Must be between 0 and "
-						+ VirginActiveConstants.MAX_BOOK_AHEAD_DAY
+						+ VirginConstants.MAX_BOOK_AHEAD_DAY
 						+ " (default: 0)");
 		date.setArgName("date");
 
@@ -88,12 +88,12 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		if (cmd.hasOption("time")) {
 			try {
 				int hourOfDay = Integer.parseInt(cmd.getOptionValue('t'));
-				if (hourOfDay < VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME || hourOfDay > VirginActiveConstants.LATEST_COURT_BOOKING_TIME) {
-					throw new ParseException("value for time must be between " + VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME + " and " + VirginActiveConstants.LATEST_COURT_BOOKING_TIME);
+				if (hourOfDay < VirginConstants.EARLIEST_COURT_BOOKING_TIME || hourOfDay > VirginConstants.LATEST_COURT_BOOKING_TIME) {
+					throw new ParseException("value for time must be between " + VirginConstants.EARLIEST_COURT_BOOKING_TIME + " and " + VirginConstants.LATEST_COURT_BOOKING_TIME);
 				}
 			}
 			catch (NumberFormatException e) {
-				throw new ParseException("value for time must be between " + VirginActiveConstants.EARLIEST_COURT_BOOKING_TIME + " and " + VirginActiveConstants.LATEST_COURT_BOOKING_TIME);
+				throw new ParseException("value for time must be between " + VirginConstants.EARLIEST_COURT_BOOKING_TIME + " and " + VirginConstants.LATEST_COURT_BOOKING_TIME);
 			}
 		}
 
@@ -103,11 +103,11 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		} else {
 			try {
 				date = Integer.parseInt(cmd.getOptionValue('d'));
-				if (date < 0 || date > VirginActiveConstants.MAX_BOOK_AHEAD_DAY) {
-					throw new ParseException("value for date must be a number between 0 and " + VirginActiveConstants.MAX_BOOK_AHEAD_DAY);
+				if (date < 0 || date > VirginConstants.MAX_BOOK_AHEAD_DAY) {
+					throw new ParseException("value for date must be a number between 0 and " + VirginConstants.MAX_BOOK_AHEAD_DAY);
 				}
 			} catch (NumberFormatException e) {
-				throw new ParseException("value for date must be a number between 0 and " + VirginActiveConstants.MAX_BOOK_AHEAD_DAY);
+				throw new ParseException("value for date must be a number between 0 and " + VirginConstants.MAX_BOOK_AHEAD_DAY);
 			}
 		}
 
@@ -134,7 +134,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 	void listCourts() {
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
-		TennisCourtViewer view = new TennisCourtViewer(username, password);
+		CommandLineView view = new CommandLineView(username, password);
 		view.printAvailableCourts(DateTime.now().plusDays(getRelativeDate()));
 	}
 	
@@ -143,7 +143,7 @@ public class VirginActiveClientImpl implements VirginActiveClient {
 		String password = command.getOptionValue("password");
 		int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
 
-		TennisCourtViewer view = new TennisCourtViewer(username, password);
+		CommandLineView view = new CommandLineView(username, password);
 		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay);
 	}
 	

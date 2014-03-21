@@ -8,13 +8,13 @@ import org.apache.commons.cli.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class VirginActiveClientTest {
+public class VirginCLITest {
 
-	private VirginActiveClientImpl testCli;
+	private VirginCLI testCli;
 	
 	@Before
 	public void setup() {
-		testCli = new TestClientImpl();
+		testCli = new TestCLI();
 	}
 	
 	@Test (expected = ParseException.class)
@@ -60,17 +60,17 @@ public class VirginActiveClientTest {
 		testCli.processArgs(args);
 		testCli.run();
 		
-		assertTrue(((TestClientImpl) testCli).helpDisplayed);
-		assertFalse(((TestClientImpl) testCli).listed);
-		assertFalse(((TestClientImpl) testCli).booked);
+		assertTrue(((TestCLI) testCli).helpDisplayed);
+		assertFalse(((TestCLI) testCli).listed);
+		assertFalse(((TestCLI) testCli).booked);
 		
 		String[] args2 = {"-u", "me", "-p", "whatever", "-list", "-h", "-t", "20"};
 		testCli.processArgs(args2);
 		testCli.run();
 		
-		assertTrue(((TestClientImpl) testCli).helpDisplayed);
-		assertFalse(((TestClientImpl) testCli).listed);
-		assertFalse(((TestClientImpl) testCli).booked);
+		assertTrue(((TestCLI) testCli).helpDisplayed);
+		assertFalse(((TestCLI) testCli).listed);
+		assertFalse(((TestCLI) testCli).booked);
 	}
 
 	@Test
@@ -79,9 +79,9 @@ public class VirginActiveClientTest {
 		testCli.processArgs(args);
 		testCli.run();
 		
-		assertFalse(((TestClientImpl) testCli).helpDisplayed);
-		assertTrue(((TestClientImpl) testCli).listed);
-		assertFalse(((TestClientImpl) testCli).booked);		
+		assertFalse(((TestCLI) testCli).helpDisplayed);
+		assertTrue(((TestCLI) testCli).listed);
+		assertFalse(((TestCLI) testCli).booked);		
 	}
 	
 	@Test
@@ -90,9 +90,9 @@ public class VirginActiveClientTest {
 		testCli.processArgs(args);
 		testCli.run();
 		
-		assertFalse(((TestClientImpl) testCli).helpDisplayed);
-		assertFalse(((TestClientImpl) testCli).listed);
-		assertTrue(((TestClientImpl) testCli).booked);		
+		assertFalse(((TestCLI) testCli).helpDisplayed);
+		assertFalse(((TestCLI) testCli).listed);
+		assertTrue(((TestCLI) testCli).booked);		
 	}
 	
 	@Test (expected = ParseException.class)
