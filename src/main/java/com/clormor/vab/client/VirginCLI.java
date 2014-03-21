@@ -49,12 +49,12 @@ public class VirginCLI implements IVirginCLI {
 		date.setArgName("date");
 
 		Option username = new Option("u", "username", true,
-				"you member's portal username");
+				"your member's portal username");
 		username.setArgName("username");
 		username.setRequired(true);
 
 		Option password = new Option("p", "password", true,
-				"you member's portal password");
+				"your member's portal password");
 		password.setArgName("password");
 		password.setRequired(true);
 
