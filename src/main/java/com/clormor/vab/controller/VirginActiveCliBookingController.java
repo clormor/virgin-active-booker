@@ -72,20 +72,26 @@ public class VirginActiveCliBookingController {
 		Select courtsSelectElement = new Select(waitForElement(By.id("alb_5")));
 
 		for (WebElement courtElement : courtsSelectElement.getOptions()) {
-			String courtName = courtElement.getText();
-			String lastChar = courtName.substring(courtName.length() - 1,
-					courtName.length());
-
-			for (TennisCourt court : TennisCourt.values()) {
-				if (court.getName().equalsIgnoreCase(lastChar)) {
-					courts.add(court);
-				}
-			}
+			courts.add(getCourtFromElement(courtElement));
 		}
 
 		return courts;
 	}
 
+	private TennisCourt getCourtFromElement(WebElement courtElement) {
+		String courtName = courtElement.getText();
+		String lastChar = courtName.substring(courtName.length() - 1,
+				courtName.length());
+
+		for (TennisCourt court : TennisCourt.values()) {
+			if (court.getName().equalsIgnoreCase(lastChar)) {
+				return court;
+			}
+		}
+		
+		throw new RuntimeException("Could not derive TennisCourt from WebElement: " + courtElement.getText());
+	}
+	
 	/**
 	 * Private method that acts as an arbiter of implicit timeouts of sorts..
 	 * sort of like a Wait For Ajax method.
@@ -102,11 +108,11 @@ public class VirginActiveCliBookingController {
 		}
 	}
 
-	public boolean bookCourt(int hourOfDay) {
+	public TennisCourt bookCourt(int hourOfDay) {
 		WebElement hourOfDayButton = getElementForBookingTime(hourOfDay);
 		
 		if (hourOfDayButton == null) {
-			return false;
+			return null;
 		}
 		
 		try {
@@ -115,6 +121,10 @@ public class VirginActiveCliBookingController {
 		} catch (InterruptedException e) {
 			// do nothing
 		}
+		
+		Select courtsSelectElement = new Select(waitForElement(By.id("alb_5")));
+		WebElement bookedCourtElement = courtsSelectElement.getFirstSelectedOption();
+		TennisCourt result = getCourtFromElement(bookedCourtElement);
 		
 		WebElement proceedStep4Button = waitForElement(By.id("rpProceed_b"));
 		proceedStep4Button.click();
@@ -127,7 +137,7 @@ public class VirginActiveCliBookingController {
 		
 		WebElement confirmButton = waitForElement(By.id("rpProceed_b"));
 //		confirmButton.click();
-		return true;
+		return result;
 	}
 	
 	public String printAvailableCourts(int hourOfDay) {

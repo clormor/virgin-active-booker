@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.clormor.vab.controller.VirginActiveCliBookingController;
+import com.clormor.vab.model.TennisCourt;
 import com.clormor.vab.model.VirginActiveConstants;
 
 public class TennisCourtViewer {
@@ -42,10 +43,14 @@ public class TennisCourtViewer {
 		controller.newCourtBooking(date);
 		
 		StringBuilder message = new StringBuilder();
-		boolean success = controller.bookCourt(hourOfDay);
+		TennisCourt court = controller.bookCourt(hourOfDay);
 		
-		if (success) {
-			message.append("a court has been booked!");
+		DateTime bookingTime = date.plusHours(hourOfDay);
+		if (court != null) {
+			message.append("Court ").append(court.getName()).append(" has been booked at ");
+			message.append(new SimpleDateFormat("h:mm a, z").format(bookingTime.toDate()));
+			message.append(" on ");
+			message.append(new SimpleDateFormat("EEE, MMM d").format(bookingTime.toDate()));
 		} else {
 			message.append("no court available");
 		}
