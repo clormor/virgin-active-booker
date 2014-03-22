@@ -33,8 +33,7 @@ public class VirginCLI implements IVirginCLI {
 
 	final Options options;
 	CommandLine command;
-	public int date;
-
+	
 	public VirginCLI() {
 		options = new Options();
 		
@@ -116,11 +115,9 @@ public class VirginCLI implements IVirginCLI {
 		}
 
 		// verify date - assign default if necessary
-		if (!cmd.hasOption("d")) {
-			date = 0;
-		} else {
+		if (cmd.hasOption("d")) {
 			try {
-				date = Integer.parseInt(cmd.getOptionValue('d'));
+				int date = Integer.parseInt(cmd.getOptionValue('d'));
 				if (date < 0 || date > VirginConstants.MAX_BOOK_AHEAD_DAY) {
 					throw new ParseException("value for date must be a number between 0 and " + VirginConstants.MAX_BOOK_AHEAD_DAY);
 				}
@@ -187,6 +184,6 @@ public class VirginCLI implements IVirginCLI {
 	}
 	
 	int getRelativeDate() {
-		return date;
+		return Integer.parseInt(command.getOptionValue('d', "0"));
 	}
 }
