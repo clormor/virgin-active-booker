@@ -40,11 +40,13 @@ public class VirginCLI implements IVirginCLI {
 		
 		Option indoor = new Option("indoor", "match any indoor courts (booking)");
 		Option outdoor = new Option("outdoor", "match any outdoor courts (booking)");
-		Option court = new Option("court", true, "specify which court to book");
 		Option book = new Option("b", "book", false, "book courts");
 		Option list = new Option("l", "list", false, "list available courts");
 		Option help = new Option("h", "help", false, "print this help message");
 
+		Option court = new Option("court", true, "specify which court to book");
+		court.setArgName("court");
+		
 		Option time = new Option("t", "time", true, "hour of day to list or book courts (24-hour format)");
 		time.setArgName("time");
 		
@@ -92,6 +94,13 @@ public class VirginCLI implements IVirginCLI {
 		
 		if (cmd.hasOption("book") && !cmd.hasOption("time")) {
 			throw new ParseException("Must specify a time to book");
+		}
+		
+		if (cmd.hasOption("court")) {
+			String court = cmd.getOptionValue("court");
+			if (court.length() > 1 || court.contains("-") || court.contains(",") || court.contains(" ")) {
+				throw new ParseException("Specify a single court only e.g. 'a', 'B', or '5'");
+			}
 		}
 		
 		if (cmd.hasOption("time")) {
@@ -149,6 +158,8 @@ public class VirginCLI implements IVirginCLI {
 	
 	void bookCourts() throws Exception {
 		List<Boolean> environments = new ArrayList<Boolean>();
+		List<String> courts = new ArrayList<String>();
+		
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
 		int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
@@ -159,6 +170,10 @@ public class VirginCLI implements IVirginCLI {
 		
 		if (command.hasOption("outdoor")) {
 			environments.add(false);
+		}
+		
+		if (command.hasOption("court")) {
+			courts.add(command.getOptionValue('d'));
 		}
 		
 		CommandLineView view = new CommandLineView(username, password);

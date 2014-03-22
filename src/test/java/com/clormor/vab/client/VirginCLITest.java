@@ -129,5 +129,11 @@ public class VirginCLITest {
 	public void courtOption() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-court", "1"};
 		testCli.processArgs(args);
-	}	
+	}
+	
+	@Test (expected=ParseException.class)
+	public void courtList() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-court", "1,2"};
+		testCli.processArgs(args);
+	}
 }
