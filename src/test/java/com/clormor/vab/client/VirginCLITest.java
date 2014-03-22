@@ -124,4 +124,19 @@ public class VirginCLITest {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-outdoor"};
 		testCli.processArgs(args);
 	}
+<<<<<<< HEAD:src/test/java/com/clormor/vab/client/VirginCLITest.java
+=======
+	
+	@Test
+	public void courtOption() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-court", "1"};
+		testCli.processArgs(args);
+	}
+	
+	@Test (expected=ParseException.class)
+	public void courtList() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-court", "1,2"};
+		testCli.processArgs(args);
+	}
+>>>>>>> release/0.3.0:src/test/java/com/clormor/vab/client/VirginCLITest.java
 }

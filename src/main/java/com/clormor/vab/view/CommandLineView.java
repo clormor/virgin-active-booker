@@ -38,13 +38,21 @@ public class CommandLineView {
 		System.out.println(message);
 	}
 
+<<<<<<< HEAD:src/main/java/com/clormor/vab/view/CommandLineView.java
 	public void bookCourts(DateTime date, int hourOfDay, List<Boolean> environments) throws Exception {
+=======
+	public void bookCourts(DateTime date, int hourOfDay, List<String> courts, List<Boolean> environments) throws Exception {
+>>>>>>> release/0.3.0:src/main/java/com/clormor/vab/view/CommandLineView.java
 		controller.login(username, password);
 
 		controller.newCourtBooking(date);
 		
 		StringBuilder message = new StringBuilder();
+<<<<<<< HEAD:src/main/java/com/clormor/vab/view/CommandLineView.java
 		VirginTennisCourt court = controller.bookCourt(hourOfDay, environments);
+=======
+		VirginTennisCourt court = controller.bookCourt(hourOfDay, courts, environments);
+>>>>>>> release/0.3.0:src/main/java/com/clormor/vab/view/CommandLineView.java
 		
 		DateTime bookingTime = date.plusHours(hourOfDay);
 		if (court != null) {
