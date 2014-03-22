@@ -112,4 +112,10 @@ public class VirginCLITest {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "blah"};
 		testCli.processArgs(args);
 	}
+
+	@Test
+	public void indoorOption() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-indoor"};
+		testCli.processArgs(args);
+	}
 }
