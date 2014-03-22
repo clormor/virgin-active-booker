@@ -55,13 +55,14 @@ public class HtmlUnitControllerTest {
 	@Test
 	public void testIndoorFilter() throws Exception {
 		
-		List<HtmlOption> options = Arrays.asList(option1, option2, option3);
+		List<HtmlOption> options = Arrays.asList(option1, option2);
 		when(currentPage.getElementById("rb_9_0")).thenReturn(mockRadioButton);
 		when(mockRadioButton.click()).thenReturn(currentPage);
 		when(client.waitForBackgroundJavaScript(HtmlUnitController.JS_TIMEOUT)).thenReturn(0);
 		when(currentPage.getElementById("alb_5")).thenReturn(mockSelect);
 		when(mockSelect.getSelectedOptions()).thenReturn(options);
 		when(option1.getText()).thenReturn("Outdoor Court A");
+		when(option2.getText()).thenReturn("Outdoor Court B");
 		when(currentPage.getElementByName("rpProceed_b")).thenReturn(mockSubmit);
 		when(mockSubmit.click()).thenReturn(currentPage);
 		
