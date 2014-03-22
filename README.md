@@ -12,7 +12,10 @@ In order to successfully use this utility, you require a valid account on the Vi
 
 2. Book courts on a given day, at a given time
 
-	a. (Optionally) filter for indoor/outdoor courts
+	a. (Optionally) book specific courts
+
+	b. (Optionally) filter for indoor/outdoor courts
+
 	
 ## Running the command-line utility
 
@@ -21,10 +24,10 @@ In order to successfully use this utility, you require a valid account on the Vi
 		> git clone git@github.com:clormor/virgin-active-booker.git
 		> cd virgin-active-booker
 		> ./gradlew installApp
+		> cd /build/install/virgin-active-booker/bin/
 		
 2. Display the help message
 
-		> cd /build/install/virgin-active-booker/bin/
 		> ./virgin-active-booker -h
 		Missing required options: u, p
 		usage: virgin-active-booker
@@ -63,8 +66,32 @@ In order to successfully use this utility, you require a valid account on the Vi
 		21:00	--> not available
 		22:00	--> not available
 
-4. Book an outdoor court tomorrow, at 9am
+4. Book a court tomorrow, at 9am
+
+		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 9
+		...
+		Court 3 has been booked at 9:00 on Sun, Mar 23
+
+## Advanced Options
+
+1. Specify indoor/outdoor courts when booking
 
 		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 9 -outdoor
 		...
 		Court A has been booked at 9:00 on Sun, Mar 23
+		
+		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 18 -indoor
+		...
+		no court available
+		
+2. Specify a specific court to book
+
+		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 8 -court 5
+		...
+		Court 5 has been booked at 8:00 on Sun, Mar 23
+		
+3. Options can be combined to broaden your selection
+
+		// will book ANY indoor court OR court A
+		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 8 -indoor -court a
+
