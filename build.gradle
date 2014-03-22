@@ -9,7 +9,6 @@ repositories {
 mainClassName = "com.clormor.vab.client.VirginCLI"
 
 dependencies {
-	compile 'org.seleniumhq.selenium:selenium-java:2.40.0'
 	compile 'net.sourceforge.htmlunit:htmlunit:2.14'
 	compile 'commons-cli:commons-cli:1.2'
 	compile 'joda-time:joda-time:2.3'
