@@ -1,17 +1,12 @@
 package com.clormor.vab.client;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.cli.ParseException;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 
 public class VirginCLITest {
 
@@ -60,7 +55,7 @@ public class VirginCLITest {
 	}
 	
 	@Test
-	public void helpCalledOnly() throws ParseException, FailingHttpStatusCodeException, MalformedURLException, IOException {
+	public void helpCalledOnly() throws Exception {
 		String[] args = {"-u", "me", "-p", "whatever", "-b", "-help", "-t", "20"};
 		testCli.processArgs(args);
 		testCli.run();
@@ -79,7 +74,7 @@ public class VirginCLITest {
 	}
 
 	@Test
-	public void listCallsList() throws ParseException, FailingHttpStatusCodeException, MalformedURLException, IOException {
+	public void listCallsList() throws ParseException, Exception {
 		String[] args = {"-u", "me", "-p", "whatever", "-l"};
 		testCli.processArgs(args);
 		testCli.run();
@@ -90,7 +85,7 @@ public class VirginCLITest {
 	}
 	
 	@Test
-	public void bookCallsBook() throws ParseException, FailingHttpStatusCodeException, MalformedURLException, IOException {
+	public void bookCallsBook() throws Exception {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "19"};
 		testCli.processArgs(args);
 		testCli.run();
@@ -115,6 +110,12 @@ public class VirginCLITest {
 	@Test (expected=ParseException.class)
 	public void timeNaN() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "blah"};
+		testCli.processArgs(args);
+	}
+
+	@Test
+	public void indoorOption() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-indoor"};
 		testCli.processArgs(args);
 	}
 }

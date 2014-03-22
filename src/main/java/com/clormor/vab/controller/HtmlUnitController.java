@@ -3,6 +3,7 @@ package com.clormor.vab.controller;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -21,11 +22,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
-public class HtmlUnitController {
+public class HtmlUnitController implements IVirginController {
 	
+	static final int JS_TIMEOUT = 1500;
 	private final VirginModel model = new VirginModel();
-	private final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
-	private HtmlPage currentPage = null;
+	WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
+	HtmlPage currentPage = null;
 
 	public HtmlUnitController() {
 		webClient.getOptions().setJavaScriptEnabled(true);
@@ -98,7 +100,10 @@ public class HtmlUnitController {
 		throw new RuntimeException("Could not derive TennisCourt from HtmlOption: " + courtOption.getText());
 	}
 	
-	public VirginTennisCourt bookCourt(int hourOfDay) throws IOException {
+	public VirginTennisCourt bookCourt(int hourOfDay, List<Boolean> environments) throws IOException {
+
+		Collection<VirginTennisCourt> potentialCourts = model.getMatchingCourts(null, null, environments);
+		
 		HtmlRadioButtonInput hourOfDayButton = getElementForBookingTime(hourOfDay);
 		
 		if (hourOfDayButton == null) {
@@ -106,17 +111,18 @@ public class HtmlUnitController {
 		}
 		
 		currentPage = hourOfDayButton.click();
-		webClient.waitForBackgroundJavaScript(1500);
+		webClient.waitForBackgroundJavaScript(JS_TIMEOUT);
 		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage.getElementById("alb_5");
 
-		HtmlOption bookedCourtElement = null;
+		VirginTennisCourt result = null;
 		List<HtmlOption> bookedCourtElements = courtsSelectElement.getSelectedOptions();
 		for (HtmlOption option : bookedCourtElements) {
-			bookedCourtElement = option;
-			break;
+			VirginTennisCourt court = getCourtFromOption(option);
+			if (potentialCourts.contains(court)) {
+				result = court;
+				break;
+			}
 		}
-		
-		VirginTennisCourt result = getCourtFromOption(bookedCourtElement);
 		
 		HtmlSubmitInput proceedStep4Button = currentPage.getElementByName("rpProceed_b");
 		currentPage = proceedStep4Button.click();
@@ -138,7 +144,7 @@ public class HtmlUnitController {
 		}
 
 		currentPage = hourOfDayButton.click();
-		webClient.waitForBackgroundJavaScript(1500);
+		webClient.waitForBackgroundJavaScript(JS_TIMEOUT);
 
 		for (VirginTennisCourt court : getAvailableCourts()) {
 			message.append(court.getName()).append(", ");

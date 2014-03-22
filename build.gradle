@@ -13,6 +13,7 @@ dependencies {
 	compile 'commons-cli:commons-cli:1.2'
 	compile 'joda-time:joda-time:2.3'
 	testCompile 'junit:junit:4.11'
+	testCompile 'org.mockito:mockito-all:1.9.5'
 }
 
 task wrapper(type: Wrapper) {

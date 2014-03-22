@@ -1,7 +1,7 @@
 package com.clormor.vab.client;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -14,7 +14,6 @@ import org.joda.time.DateTime;
 
 import com.clormor.vab.model.VirginConstants;
 import com.clormor.vab.view.CommandLineView;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 
 public class VirginCLI implements IVirginCLI {
 
@@ -39,6 +38,7 @@ public class VirginCLI implements IVirginCLI {
 	public VirginCLI() {
 		options = new Options();
 		
+		Option indoor = new Option("indoor", "match any indoor courts (booking)");
 		Option book = new Option("b", "book", false, "book courts");
 		Option list = new Option("l", "list", false, "list available courts");
 		Option help = new Option("h", "help", false, "print this help message");
@@ -69,6 +69,7 @@ public class VirginCLI implements IVirginCLI {
 		options.addOption(list);
 		options.addOption(book);
 		options.addOption(time);
+		options.addOption(indoor);
 	}
 
 	public void processArgs(String[] args) throws ParseException {
@@ -118,7 +119,7 @@ public class VirginCLI implements IVirginCLI {
 		command = cmd;
 	}
 
-	public void run() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	public void run() throws Exception {
 
 		if (command.hasOption("help")) {
 			printHelpMessage();
@@ -135,20 +136,25 @@ public class VirginCLI implements IVirginCLI {
 		
 	}
 
-	void listCourts() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	void listCourts() throws Exception {
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
 		CommandLineView view = new CommandLineView(username, password);
 		view.printAvailableCourts(DateTime.now().plusDays(getRelativeDate()));
 	}
 	
-	void bookCourts() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	void bookCourts() throws Exception {
+		List<Boolean> environments = new ArrayList<Boolean>();
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
 		int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
 
+		if (command.hasOption("indoor")) {
+			environments.add(true);
+		}
+		
 		CommandLineView view = new CommandLineView(username, password);
-		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay);
+		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay, environments);
 	}
 	
 	public void printHelpMessage() {
