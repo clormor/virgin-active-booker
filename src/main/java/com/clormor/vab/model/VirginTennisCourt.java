@@ -2,7 +2,7 @@ package com.clormor.vab.model;
 
 import java.util.EnumSet;
 
-public enum TennisCourt {
+public enum VirginTennisCourt {
 
 	COURT_1("1", Surface.CARPET, true), 
 			COURT_2("2", Surface.CARPET, true),
@@ -14,13 +14,13 @@ public enum TennisCourt {
 			COURT_B("B", Surface.HARD, false),
 			COURT_C("C", Surface.ARTIFICIAL_GRASS, false);
 
-	public static final EnumSet<TennisCourt> all = EnumSet.of(COURT_1, COURT_2, COURT_3, COURT_4, COURT_5,COURT_6, COURT_A, COURT_B, COURT_C);
+	public static final EnumSet<VirginTennisCourt> all = EnumSet.of(COURT_1, COURT_2, COURT_3, COURT_4, COURT_5,COURT_6, COURT_A, COURT_B, COURT_C);
 	
 	private final String name;
 	private final Surface surface;
 	private final boolean indoor;
 
-	TennisCourt(String name, Surface surface, boolean indoor) {
+	VirginTennisCourt(String name, Surface surface, boolean indoor) {
 		this.name = name;
 		this.surface = surface;
 		this.indoor = indoor;
