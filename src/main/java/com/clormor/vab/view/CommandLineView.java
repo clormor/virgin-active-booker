@@ -1,21 +1,19 @@
 package com.clormor.vab.view;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 
 import org.joda.time.DateTime;
 
 import com.clormor.vab.controller.HtmlUnitController;
+import com.clormor.vab.controller.IVirginController;
 import com.clormor.vab.model.VirginConstants;
 import com.clormor.vab.model.VirginTennisCourt;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 
 public class CommandLineView {
 
 	private final String username;
 	private final String password;
-	private final HtmlUnitController controller;
+	private final IVirginController controller;
 
 	public CommandLineView(String username, String password) {
 		this.username = username;
@@ -23,7 +21,7 @@ public class CommandLineView {
 		controller = new HtmlUnitController();
 	}
 
-	public void printAvailableCourts(DateTime date) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	public void printAvailableCourts(DateTime date) throws Exception {
 		controller.login(username, password);
 
 		controller.newCourtBooking(date);
@@ -39,13 +37,13 @@ public class CommandLineView {
 		System.out.println(message);
 	}
 
-	public void bookCourts(DateTime date, int hourOfDay) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	public void bookCourts(DateTime date, int hourOfDay) throws Exception {
 		controller.login(username, password);
 
 		controller.newCourtBooking(date);
 		
 		StringBuilder message = new StringBuilder();
-		VirginTennisCourt court = controller.bookCourt(hourOfDay);
+		VirginTennisCourt court = controller.bookCourt(hourOfDay, null);
 		
 		DateTime bookingTime = date.plusHours(hourOfDay);
 		if (court != null) {
