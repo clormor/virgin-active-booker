@@ -100,15 +100,9 @@ public class HtmlUnitController implements IVirginController {
 		throw new RuntimeException("Could not derive TennisCourt from HtmlOption: " + courtOption.getText());
 	}
 	
-<<<<<<< HEAD
-	public VirginTennisCourt bookCourt(int hourOfDay, List<Boolean> environments) throws IOException {
-
-		Collection<VirginTennisCourt> potentialCourts = model.getMatchingCourts(null, null, environments);
-=======
 	public VirginTennisCourt bookCourt(int hourOfDay, List<String> courts, List<Boolean> environments) throws IOException {
 
 		Collection<VirginTennisCourt> potentialCourts = model.getMatchingCourts(courts, null, environments);
->>>>>>> release/0.3.0
 		
 		HtmlRadioButtonInput hourOfDayButton = getElementForBookingTime(hourOfDay);
 		

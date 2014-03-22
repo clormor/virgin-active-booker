@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-virgin-active-booker
-====================
-
-code to automate booking of classes/tennis courts at Virgin Active gyms
-=======
 # Virgin Active Court Booker
 
 A library that books tennis court at [Virgin Active](http://www.virginactive.co.uk/) health clubs.
@@ -101,4 +95,3 @@ In order to successfully use this utility, you require a valid account on the Vi
 		// will book ANY indoor court OR court A
 		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 8 -indoor -court a
 
->>>>>>> release/0.3.0

@@ -33,12 +33,7 @@ public class VirginCLI implements IVirginCLI {
 
 	final Options options;
 	CommandLine command;
-<<<<<<< HEAD:src/main/java/com/clormor/vab/client/VirginCLI.java
-	public int date;
-
-=======
 	
->>>>>>> release/0.3.0:src/main/java/com/clormor/vab/client/VirginCLI.java
 	public VirginCLI() {
 		options = new Options();
 		
@@ -79,10 +74,7 @@ public class VirginCLI implements IVirginCLI {
 		options.addOption(time);
 		options.addOption(indoor);
 		options.addOption(outdoor);
-<<<<<<< HEAD:src/main/java/com/clormor/vab/client/VirginCLI.java
-=======
 		options.addOption(court);
->>>>>>> release/0.3.0:src/main/java/com/clormor/vab/client/VirginCLI.java
 	}
 
 	public void processArgs(String[] args) throws ParseException {
@@ -125,11 +117,7 @@ public class VirginCLI implements IVirginCLI {
 		// verify date - assign default if necessary
 		if (cmd.hasOption("d")) {
 			try {
-<<<<<<< HEAD:src/main/java/com/clormor/vab/client/VirginCLI.java
-				date = Integer.parseInt(cmd.getOptionValue('d'));
-=======
 				int date = Integer.parseInt(cmd.getOptionValue('d'));
->>>>>>> release/0.3.0:src/main/java/com/clormor/vab/client/VirginCLI.java
 				if (date < 0 || date > VirginConstants.MAX_BOOK_AHEAD_DAY) {
 					throw new ParseException("value for date must be a number between 0 and " + VirginConstants.MAX_BOOK_AHEAD_DAY);
 				}
@@ -167,11 +155,8 @@ public class VirginCLI implements IVirginCLI {
 	
 	void bookCourts() throws Exception {
 		List<Boolean> environments = new ArrayList<Boolean>();
-<<<<<<< HEAD:src/main/java/com/clormor/vab/client/VirginCLI.java
-=======
 		List<String> courts = new ArrayList<String>();
-		
->>>>>>> release/0.3.0:src/main/java/com/clormor/vab/client/VirginCLI.java
+
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
 		int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
@@ -184,17 +169,12 @@ public class VirginCLI implements IVirginCLI {
 			environments.add(false);
 		}
 		
-<<<<<<< HEAD:src/main/java/com/clormor/vab/client/VirginCLI.java
-		CommandLineView view = new CommandLineView(username, password);
-		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay, environments);
-=======
 		if (command.hasOption("court")) {
 			courts.add(command.getOptionValue("court"));
 		}
 		
 		CommandLineView view = new CommandLineView(username, password);
 		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay, courts, environments);
->>>>>>> release/0.3.0:src/main/java/com/clormor/vab/client/VirginCLI.java
 	}
 	
 	public void printHelpMessage() {
