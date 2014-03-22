@@ -118,4 +118,10 @@ public class VirginCLITest {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-indoor"};
 		testCli.processArgs(args);
 	}
+	
+	@Test
+	public void outdoorOption() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-outdoor"};
+		testCli.processArgs(args);
+	}
 }
