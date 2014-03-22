@@ -21,11 +21,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
-public class HtmlUnitController {
+public class HtmlUnitController implements IVirginController {
 	
+	static final int JS_TIMEOUT = 1500;
 	private final VirginModel model = new VirginModel();
-	private final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
-	private HtmlPage currentPage = null;
+	WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
+	HtmlPage currentPage = null;
 
 	public HtmlUnitController() {
 		webClient.getOptions().setJavaScriptEnabled(true);
@@ -98,7 +99,7 @@ public class HtmlUnitController {
 		throw new RuntimeException("Could not derive TennisCourt from HtmlOption: " + courtOption.getText());
 	}
 	
-	public VirginTennisCourt bookCourt(int hourOfDay) throws IOException {
+	public VirginTennisCourt bookCourt(int hourOfDay, List<Boolean> environments) throws IOException {
 		HtmlRadioButtonInput hourOfDayButton = getElementForBookingTime(hourOfDay);
 		
 		if (hourOfDayButton == null) {
@@ -106,7 +107,7 @@ public class HtmlUnitController {
 		}
 		
 		currentPage = hourOfDayButton.click();
-		webClient.waitForBackgroundJavaScript(1500);
+		webClient.waitForBackgroundJavaScript(JS_TIMEOUT);
 		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage.getElementById("alb_5");
 
 		HtmlOption bookedCourtElement = null;
@@ -138,7 +139,7 @@ public class HtmlUnitController {
 		}
 
 		currentPage = hourOfDayButton.click();
-		webClient.waitForBackgroundJavaScript(1500);
+		webClient.waitForBackgroundJavaScript(JS_TIMEOUT);
 
 		for (VirginTennisCourt court : getAvailableCourts()) {
 			message.append(court.getName()).append(", ");

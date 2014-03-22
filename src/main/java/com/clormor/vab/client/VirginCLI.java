@@ -1,8 +1,5 @@
 package com.clormor.vab.client;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -14,7 +11,6 @@ import org.joda.time.DateTime;
 
 import com.clormor.vab.model.VirginConstants;
 import com.clormor.vab.view.CommandLineView;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 
 public class VirginCLI implements IVirginCLI {
 
@@ -118,7 +114,7 @@ public class VirginCLI implements IVirginCLI {
 		command = cmd;
 	}
 
-	public void run() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	public void run() throws Exception {
 
 		if (command.hasOption("help")) {
 			printHelpMessage();
@@ -135,14 +131,14 @@ public class VirginCLI implements IVirginCLI {
 		
 	}
 
-	void listCourts() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	void listCourts() throws Exception {
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
 		CommandLineView view = new CommandLineView(username, password);
 		view.printAvailableCourts(DateTime.now().plusDays(getRelativeDate()));
 	}
 	
-	void bookCourts() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	void bookCourts() throws Exception {
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
 		int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
