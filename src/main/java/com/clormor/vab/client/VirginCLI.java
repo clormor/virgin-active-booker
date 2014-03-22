@@ -170,7 +170,7 @@ public class VirginCLI implements IVirginCLI {
 		}
 		
 		if (command.hasOption("court")) {
-			courts.add(command.getOptionValue('d'));
+			courts.add(command.getOptionValue("court"));
 		}
 		
 		CommandLineView view = new CommandLineView(username, password);
