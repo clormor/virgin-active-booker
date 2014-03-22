@@ -174,7 +174,7 @@ public class VirginCLI implements IVirginCLI {
 		}
 		
 		CommandLineView view = new CommandLineView(username, password);
-		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay, environments);
+		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay, courts, environments);
 	}
 	
 	public void printHelpMessage() {

@@ -38,13 +38,13 @@ public class CommandLineView {
 		System.out.println(message);
 	}
 
-	public void bookCourts(DateTime date, int hourOfDay, List<Boolean> environments) throws Exception {
+	public void bookCourts(DateTime date, int hourOfDay, List<String> courts, List<Boolean> environments) throws Exception {
 		controller.login(username, password);
 
 		controller.newCourtBooking(date);
 		
 		StringBuilder message = new StringBuilder();
-		VirginTennisCourt court = controller.bookCourt(hourOfDay, environments);
+		VirginTennisCourt court = controller.bookCourt(hourOfDay, courts, environments);
 		
 		DateTime bookingTime = date.plusHours(hourOfDay);
 		if (court != null) {

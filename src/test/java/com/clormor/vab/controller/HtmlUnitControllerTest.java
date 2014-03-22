@@ -1,6 +1,7 @@
 package com.clormor.vab.controller;
 
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -60,13 +62,13 @@ public class HtmlUnitControllerTest {
 		when(mockRadioButton.click()).thenReturn(currentPage);
 		when(client.waitForBackgroundJavaScript(HtmlUnitController.JS_TIMEOUT)).thenReturn(0);
 		when(currentPage.getElementById("alb_5")).thenReturn(mockSelect);
-		when(mockSelect.getSelectedOptions()).thenReturn(options);
+		when(mockSelect.getOptions()).thenReturn(options);
 		when(option1.getText()).thenReturn("Outdoor Court A");
 		when(option2.getText()).thenReturn("Outdoor Court B");
 		when(currentPage.getElementByName("rpProceed_b")).thenReturn(mockSubmit);
 		when(mockSubmit.click()).thenReturn(currentPage);
 		
-		assertNull(testController.bookCourt(9, Arrays.asList(true)));
+		assertNull(testController.bookCourt(9, null, Arrays.asList(true)));
 	}
 	
 	@Test
@@ -77,12 +79,30 @@ public class HtmlUnitControllerTest {
 		when(mockRadioButton.click()).thenReturn(currentPage);
 		when(client.waitForBackgroundJavaScript(HtmlUnitController.JS_TIMEOUT)).thenReturn(0);
 		when(currentPage.getElementById("alb_5")).thenReturn(mockSelect);
-		when(mockSelect.getSelectedOptions()).thenReturn(options);
+		when(mockSelect.getOptions()).thenReturn(options);
 		when(option1.getText()).thenReturn("Indoor Court 1");
 		when(option2.getText()).thenReturn("Indoor Court 2");
 		when(currentPage.getElementByName("rpProceed_b")).thenReturn(mockSubmit);
 		when(mockSubmit.click()).thenReturn(currentPage);
 		
-		assertNull(testController.bookCourt(9, Arrays.asList(false)));
+		assertNull(testController.bookCourt(9, null, Arrays.asList(false)));
+	}
+	
+	@Test
+	public void testCourtFilter() throws Exception {
+		
+		List<HtmlOption> options = Arrays.asList(option1, option2);
+		when(currentPage.getElementById("rb_9_0")).thenReturn(mockRadioButton);
+		when(mockRadioButton.click()).thenReturn(currentPage);
+		when(client.waitForBackgroundJavaScript(HtmlUnitController.JS_TIMEOUT)).thenReturn(0);
+		when(currentPage.getElementById("alb_5")).thenReturn(mockSelect);
+		when(mockSelect.getOptions()).thenReturn(options);
+		when(option1.getText()).thenReturn("Indoor Court 1");
+		when(option2.getText()).thenReturn("Indoor Court 2");
+		when(currentPage.getElementByName("rpProceed_b")).thenReturn(mockSubmit);
+		when(mockSubmit.click()).thenReturn(currentPage);
+		
+		VirginTennisCourt bookedCourt = testController.bookCourt(9, Arrays.asList("2"), null);
+		assertEquals(VirginTennisCourt.COURT_2, bookedCourt);
 	}
 }
