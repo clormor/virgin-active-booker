@@ -11,6 +11,7 @@ import com.clormor.vab.model.VirginBookingDate;
 import com.clormor.vab.model.VirginConstants;
 import com.clormor.vab.model.VirginModel;
 import com.clormor.vab.model.VirginTennisCourt;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
@@ -23,7 +24,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 public class HtmlUnitController {
 	
 	private final VirginModel model = new VirginModel();
-	private final WebClient webClient = new WebClient();
+	private final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
 	private HtmlPage currentPage = null;
 
 	public HtmlUnitController() {
@@ -104,45 +105,28 @@ public class HtmlUnitController {
 			return null;
 		}
 		
-		try {
-			hourOfDayButton.setChecked(true);
-			System.out.println("sleeping...");
-			Thread.sleep(5000);
-			System.out.println("awake...");
-		} catch (InterruptedException e) {
-			// do nothing
-		}
-
-		//TODO figure out how to get HtmlUnit to find the dynamically-loaded select input
-		currentPage = (HtmlPage) currentPage.refresh();
+		currentPage = hourOfDayButton.click();
+		webClient.waitForBackgroundJavaScript(1500);
 		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage.getElementById("alb_5");
 
 		HtmlOption bookedCourtElement = null;
-		
 		List<HtmlOption> bookedCourtElements = courtsSelectElement.getSelectedOptions();
 		for (HtmlOption option : bookedCourtElements) {
-			System.out.println("Option: " + option.getText());
 			bookedCourtElement = option;
+			break;
 		}
 		
 		VirginTennisCourt result = getCourtFromOption(bookedCourtElement);
 		
-		
 		HtmlSubmitInput proceedStep4Button = currentPage.getElementByName("rpProceed_b");
 		currentPage = proceedStep4Button.click();
-		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// do nothing
-		}
 		
 		HtmlSubmitInput confirmButton = currentPage.getElementByName("rpProceed_b");
 //		currentPage = confirmButton.click();
 		return result;
 	}
 	
-	public String printAvailableCourts(int hourOfDay) {
+	public String printAvailableCourts(int hourOfDay) throws IOException {
 		StringBuilder message = new StringBuilder();
 		message.append(hourOfDay).append(":00\t--> ");
 
@@ -153,12 +137,8 @@ public class HtmlUnitController {
 			return message.toString();
 		}
 
-		try {
-			hourOfDayButton.setChecked(true);
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// do nothing
-		}
+		currentPage = hourOfDayButton.click();
+		webClient.waitForBackgroundJavaScript(1500);
 
 		for (VirginTennisCourt court : getAvailableCourts()) {
 			message.append(court.getName()).append(", ");
@@ -191,14 +171,8 @@ public class HtmlUnitController {
 		currentPage = newBookingButton.click();
 
 		HtmlRadioButtonInput listViewRadioButton = (HtmlRadioButtonInput) currentPage.getElementById("rbSearch");
-		listViewRadioButton.setChecked(true);
+		currentPage = listViewRadioButton.click();
 		
-		try {
-			Thread.sleep(200);
-		} catch (InterruptedException e) {
-			// do nothing
-		}
-
 		HtmlSubmitInput proceedStep2Button = currentPage.getElementByName("rpGoStep2_b");
 		currentPage = proceedStep2Button.click();
 
