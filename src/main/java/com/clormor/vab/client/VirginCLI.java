@@ -40,6 +40,7 @@ public class VirginCLI implements IVirginCLI {
 		
 		Option indoor = new Option("indoor", "match any indoor courts (booking)");
 		Option outdoor = new Option("outdoor", "match any outdoor courts (booking)");
+		Option court = new Option("court", true, "specify which court to book");
 		Option book = new Option("b", "book", false, "book courts");
 		Option list = new Option("l", "list", false, "list available courts");
 		Option help = new Option("h", "help", false, "print this help message");
@@ -72,6 +73,7 @@ public class VirginCLI implements IVirginCLI {
 		options.addOption(time);
 		options.addOption(indoor);
 		options.addOption(outdoor);
+		options.addOption(court);
 	}
 
 	public void processArgs(String[] args) throws ParseException {
