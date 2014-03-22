@@ -33,8 +33,7 @@ public class VirginCLI implements IVirginCLI {
 
 	final Options options;
 	CommandLine command;
-	public int date;
-
+	
 	public VirginCLI() {
 		options = new Options();
 		
@@ -44,6 +43,9 @@ public class VirginCLI implements IVirginCLI {
 		Option list = new Option("l", "list", false, "list available courts");
 		Option help = new Option("h", "help", false, "print this help message");
 
+		Option court = new Option("court", true, "specify which court to book");
+		court.setArgName("court");
+		
 		Option time = new Option("t", "time", true, "hour of day to list or book courts (24-hour format)");
 		time.setArgName("time");
 		
@@ -72,6 +74,7 @@ public class VirginCLI implements IVirginCLI {
 		options.addOption(time);
 		options.addOption(indoor);
 		options.addOption(outdoor);
+		options.addOption(court);
 	}
 
 	public void processArgs(String[] args) throws ParseException {
@@ -92,6 +95,13 @@ public class VirginCLI implements IVirginCLI {
 			throw new ParseException("Must specify a time to book");
 		}
 		
+		if (cmd.hasOption("court")) {
+			String court = cmd.getOptionValue("court");
+			if (court.length() > 1 || court.contains("-") || court.contains(",") || court.contains(" ")) {
+				throw new ParseException("Specify a single court only e.g. 'a', 'B', or '5'");
+			}
+		}
+		
 		if (cmd.hasOption("time")) {
 			try {
 				int hourOfDay = Integer.parseInt(cmd.getOptionValue('t'));
@@ -105,11 +115,9 @@ public class VirginCLI implements IVirginCLI {
 		}
 
 		// verify date - assign default if necessary
-		if (!cmd.hasOption("d")) {
-			date = 0;
-		} else {
+		if (cmd.hasOption("d")) {
 			try {
-				date = Integer.parseInt(cmd.getOptionValue('d'));
+				int date = Integer.parseInt(cmd.getOptionValue('d'));
 				if (date < 0 || date > VirginConstants.MAX_BOOK_AHEAD_DAY) {
 					throw new ParseException("value for date must be a number between 0 and " + VirginConstants.MAX_BOOK_AHEAD_DAY);
 				}
@@ -147,6 +155,8 @@ public class VirginCLI implements IVirginCLI {
 	
 	void bookCourts() throws Exception {
 		List<Boolean> environments = new ArrayList<Boolean>();
+		List<String> courts = new ArrayList<String>();
+		
 		String username = command.getOptionValue("username");
 		String password = command.getOptionValue("password");
 		int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
@@ -159,8 +169,12 @@ public class VirginCLI implements IVirginCLI {
 			environments.add(false);
 		}
 		
+		if (command.hasOption("court")) {
+			courts.add(command.getOptionValue("court"));
+		}
+		
 		CommandLineView view = new CommandLineView(username, password);
-		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay, environments);
+		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay, courts, environments);
 	}
 	
 	public void printHelpMessage() {
@@ -170,6 +184,6 @@ public class VirginCLI implements IVirginCLI {
 	}
 	
 	int getRelativeDate() {
-		return date;
+		return Integer.parseInt(command.getOptionValue('d', "0"));
 	}
 }

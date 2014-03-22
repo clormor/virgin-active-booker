@@ -8,7 +8,7 @@ import com.clormor.vab.model.VirginTennisCourt;
 
 public interface IVirginController {
 
-	VirginTennisCourt bookCourt(int hourOfDay, List<Boolean> environments) throws Exception;
+	VirginTennisCourt bookCourt(int hourOfDay, List<String> courts, List<Boolean> environments) throws Exception;
 	
 	String printAvailableCourts(int hourOfDay) throws Exception;
 	
