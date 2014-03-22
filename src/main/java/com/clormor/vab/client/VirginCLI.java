@@ -39,6 +39,7 @@ public class VirginCLI implements IVirginCLI {
 		options = new Options();
 		
 		Option indoor = new Option("indoor", "match any indoor courts (booking)");
+		Option outdoor = new Option("outdoor", "match any outdoor courts (booking)");
 		Option book = new Option("b", "book", false, "book courts");
 		Option list = new Option("l", "list", false, "list available courts");
 		Option help = new Option("h", "help", false, "print this help message");
@@ -70,6 +71,7 @@ public class VirginCLI implements IVirginCLI {
 		options.addOption(book);
 		options.addOption(time);
 		options.addOption(indoor);
+		options.addOption(outdoor);
 	}
 
 	public void processArgs(String[] args) throws ParseException {
@@ -151,6 +153,10 @@ public class VirginCLI implements IVirginCLI {
 
 		if (command.hasOption("indoor")) {
 			environments.add(true);
+		}
+		
+		if (command.hasOption("outdoor")) {
+			environments.add(false);
 		}
 		
 		CommandLineView view = new CommandLineView(username, password);

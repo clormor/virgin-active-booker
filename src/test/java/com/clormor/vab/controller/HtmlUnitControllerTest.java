@@ -69,4 +69,20 @@ public class HtmlUnitControllerTest {
 		assertNull(testController.bookCourt(9, Arrays.asList(true)));
 	}
 	
+	@Test
+	public void testOutdoorFilter() throws Exception {
+		
+		List<HtmlOption> options = Arrays.asList(option1, option2);
+		when(currentPage.getElementById("rb_9_0")).thenReturn(mockRadioButton);
+		when(mockRadioButton.click()).thenReturn(currentPage);
+		when(client.waitForBackgroundJavaScript(HtmlUnitController.JS_TIMEOUT)).thenReturn(0);
+		when(currentPage.getElementById("alb_5")).thenReturn(mockSelect);
+		when(mockSelect.getSelectedOptions()).thenReturn(options);
+		when(option1.getText()).thenReturn("Indoor Court 1");
+		when(option2.getText()).thenReturn("Indoor Court 2");
+		when(currentPage.getElementByName("rpProceed_b")).thenReturn(mockSubmit);
+		when(mockSubmit.click()).thenReturn(currentPage);
+		
+		assertNull(testController.bookCourt(9, Arrays.asList(false)));
+	}
 }

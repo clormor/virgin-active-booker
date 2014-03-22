@@ -115,7 +115,7 @@ public class HtmlUnitController implements IVirginController {
 		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage.getElementById("alb_5");
 
 		VirginTennisCourt result = null;
-		List<HtmlOption> bookedCourtElements = courtsSelectElement.getSelectedOptions();
+		List<HtmlOption> bookedCourtElements = courtsSelectElement.getOptions();
 		for (HtmlOption option : bookedCourtElements) {
 			VirginTennisCourt court = getCourtFromOption(option);
 			if (potentialCourts.contains(court)) {
