@@ -2,11 +2,11 @@ package com.clormor.vab.client;
 
 import org.apache.commons.cli.ParseException;
 
-public interface VirginActiveClient {
+public interface IVirginCLI {
 
 	void processArgs(String[] args) throws ParseException;
 	
-	void run();
+	void run() throws Exception;
 	
 	void printHelpMessage();
 }
