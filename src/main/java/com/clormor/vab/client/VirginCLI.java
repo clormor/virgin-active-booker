@@ -41,6 +41,7 @@ public class VirginCLI implements IVirginCLI {
 		Option outdoor = new Option("outdoor", "match any outdoor courts (booking)");
 		Option book = new Option("b", "book", false, "book courts");
 		Option list = new Option("l", "list", false, "list available courts");
+		Option view = new Option("v", "view", false, "view my bookings");
 		Option help = new Option("h", "help", false, "print this help message");
 
 		Option court = new Option("court", true, "specify which court to book");
@@ -69,6 +70,7 @@ public class VirginCLI implements IVirginCLI {
 		options.addOption(help);
 		options.addOption(list);
 		options.addOption(book);
+		options.addOption(view);
 		options.addOption(time);
 		options.addOption(indoor);
 		options.addOption(outdoor);
@@ -80,16 +82,22 @@ public class VirginCLI implements IVirginCLI {
 
 		command = parser.parse(options, args);
 		
+		// if help requested, ignore all other arguments
 		if (command.hasOption("help")) {
 			return;
 		}
 		
-		if (command.hasOption("list") && command.hasOption("book")) {
-			throw new ParseException("Must specify one of book or list");
+		// check only one of the required actions is requested
+		int requestedActions = 0;
+		String[] actionOptions = new String[] {"l", "b", "v"};
+		for (String option : actionOptions) {
+			if (command.hasOption(option)) {
+				requestedActions ++;
+			}
 		}
-
-		if (!command.hasOption("list") && !command.hasOption("book")) {
-			throw new ParseException("Must specify one of book or list");
+		
+		if (requestedActions != 1) {
+			throw new ParseException("Must specify one of view, list or book");
 		}
 		
 		if (command.hasOption("book") && !command.hasOption("time")) {

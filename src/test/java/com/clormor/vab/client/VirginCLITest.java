@@ -136,4 +136,26 @@ public class VirginCLITest {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-court", "1,2"};
 		testCli.processArgs(args);
 	}
+	
+	@Test
+	public void view() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-view"};
+		testCli.processArgs(args);
+		
+		String[] args2 = {"-u", "me", "-p", "whatever", "-v"};
+		testCli.processArgs(args2);
+	}
+	
+	@Test (expected=ParseException.class)
+	public void viewAndBook() throws ParseException {
+		String[] args = {"-u", "me", "-p", "whatever", "-v", "-b", "-d", "2", "-t", "1"};
+		testCli.processArgs(args);
+	}
+	
+	@Test (expected=ParseException.class)
+	public void viewAndList() throws ParseException {	
+		String[] args2 = {"-u", "me", "-p", "whatever", "-v", "-l", "-d", "2"};
+		testCli.processArgs(args2);
+	}
 }
+
