@@ -5,6 +5,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import com.clormor.vab.model.VirginTennisCourt;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public interface IVirginController {
 
@@ -12,9 +13,11 @@ public interface IVirginController {
 	
 	String printAvailableCourts(int hourOfDay) throws Exception;
 	
-	void login(String username, String password) throws Exception;
+	HtmlPage login(final String username, final String password) throws Exception;
 	
 	void logout() throws Exception;
 	
-	void newCourtBooking(DateTime date) throws Exception;
+	void newCourtBooking(final HtmlPage currentPage, final DateTime date) throws Exception;
+	
+	HtmlPage myBookings(final HtmlPage currentPage) throws Exception;
 }

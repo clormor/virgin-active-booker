@@ -1,7 +1,8 @@
 package com.clormor.vab.controller;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.clormor.vab.model.VirginTennisCourt;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -104,5 +106,20 @@ public class HtmlUnitControllerTest {
 		
 		VirginTennisCourt bookedCourt = testController.bookCourt(9, Arrays.asList("2"), null);
 		assertEquals(VirginTennisCourt.COURT_2, bookedCourt);
+	}
+	
+	@Test
+	public void testMyBookings() throws Exception {
+		when(currentPage.getElementByName("btnViewMy")).thenReturn(mockSubmit);
+		when(mockSubmit.click()).thenReturn(currentPage);
+		
+		HtmlPage newPage = testController.myBookings(currentPage);
+		assertNotNull(newPage);
+	}
+	
+	@Test (expected = ElementNotFoundException.class)
+	public void testMyBookingsWrongPage() throws Exception {
+		when(currentPage.getElementByName("btnViewMy")).thenThrow(new ElementNotFoundException("", "", ""));
+		testController.myBookings(currentPage);
 	}
 }

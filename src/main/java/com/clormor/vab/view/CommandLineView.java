@@ -9,6 +9,7 @@ import com.clormor.vab.controller.HtmlUnitController;
 import com.clormor.vab.controller.IVirginController;
 import com.clormor.vab.model.VirginConstants;
 import com.clormor.vab.model.VirginTennisCourt;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class CommandLineView {
 
@@ -23,9 +24,9 @@ public class CommandLineView {
 	}
 
 	public void printAvailableCourts(DateTime date) throws Exception {
-		controller.login(username, password);
+		HtmlPage homePage = controller.login(username, password);
 
-		controller.newCourtBooking(date);
+		controller.newCourtBooking(homePage, date);
 
 		StringBuilder message = new StringBuilder();
 		message.append(new SimpleDateFormat("EEE, MMM d").format(date.toDate()));
@@ -39,9 +40,9 @@ public class CommandLineView {
 	}
 
 	public void bookCourts(DateTime date, int hourOfDay, List<String> courts, List<Boolean> environments) throws Exception {
-		controller.login(username, password);
+		HtmlPage homePage = controller.login(username, password);
 
-		controller.newCourtBooking(date);
+		controller.newCourtBooking(homePage, date);
 		
 		StringBuilder message = new StringBuilder();
 		VirginTennisCourt court = controller.bookCourt(hourOfDay, courts, environments);
@@ -57,5 +58,11 @@ public class CommandLineView {
 		
 		controller.logout();
 		System.out.println(message);
+	}
+	
+	public void viewBookings() throws Exception {
+		HtmlPage homePage = controller.login(username, password);
+		
+		controller.myBookings(homePage);
 	}
 }

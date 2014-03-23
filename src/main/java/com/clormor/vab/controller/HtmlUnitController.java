@@ -17,6 +17,7 @@ import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -162,7 +163,8 @@ public class HtmlUnitController implements IVirginController {
 		return message.toString();
 	}
 
-	public void login(String username, String password) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	@Override
+	public HtmlPage login(final String username, final String password) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
 		currentPage = webClient.getPage(VirginConstants.VIRGIN_PORTAL_URL);
 		
 		HtmlInput usernameInput = currentPage.getElementByName("edUsername");
@@ -172,28 +174,36 @@ public class HtmlUnitController implements IVirginController {
 		passwordInput.setValueAttribute(password);
 		
 		final HtmlSubmitInput button =  currentPage.getElementByName("btnOK");
-		currentPage = button.click();
+		return button.click();
 	}
 
+	@Override
 	public void logout() {
 		webClient.closeAllWindows();
 	}
 
-	public void newCourtBooking(DateTime date) throws IOException {
+	@Override
+	public void newCourtBooking(final HtmlPage currentPage, final DateTime date) throws IOException {
 		HtmlSubmitInput newBookingButton = currentPage.getElementByName("btnNB");
-		currentPage = newBookingButton.click();
+		this.currentPage = newBookingButton.click();
 
 		HtmlRadioButtonInput listViewRadioButton = (HtmlRadioButtonInput) currentPage.getElementById("rbSearch");
-		currentPage = listViewRadioButton.click();
+		this.currentPage = listViewRadioButton.click();
 		
 		HtmlSubmitInput proceedStep2Button = currentPage.getElementByName("rpGoStep2_b");
-		currentPage = proceedStep2Button.click();
+		this.currentPage = proceedStep2Button.click();
 
 		HtmlRadioButtonInput elementForBookingDate = getElementForBookingDate(date);
 		elementForBookingDate.setChecked(true);
 
 		HtmlSubmitInput proceedStep3Button = currentPage.getElementByName("rpProceed_b");
-		currentPage = proceedStep3Button.click();
+		this.currentPage = proceedStep3Button.click();
+	}
+
+	@Override
+	public HtmlPage myBookings(final HtmlPage currentPage) throws Exception {
+		HtmlSubmitInput viewBookingsButton = currentPage.getElementByName("btnViewMy");
+		return viewBookingsButton.click();
 	}
 
 }
