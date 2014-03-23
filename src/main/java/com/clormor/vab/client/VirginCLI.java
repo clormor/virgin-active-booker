@@ -58,12 +58,10 @@ public class VirginCLI implements IVirginCLI {
 		Option username = new Option("u", "username", true,
 				"your member's portal username");
 		username.setArgName("username");
-		username.setRequired(true);
 
 		Option password = new Option("p", "password", true,
 				"your member's portal password");
 		password.setArgName("password");
-		password.setRequired(true);
 
 		options.addOption(username);
 		options.addOption(password);
@@ -79,32 +77,35 @@ public class VirginCLI implements IVirginCLI {
 
 	public void processArgs(String[] args) throws ParseException {
 		CommandLineParser parser = new BasicParser();
-		CommandLine cmd = null;
 
-		cmd = parser.parse(options, args);
-
-		if (cmd.hasOption("list") && cmd.hasOption("book")) {
+		command = parser.parse(options, args);
+		
+		if (command.hasOption("help")) {
+			return;
+		}
+		
+		if (command.hasOption("list") && command.hasOption("book")) {
 			throw new ParseException("Must specify one of book or list");
 		}
 
-		if (!cmd.hasOption("list") && !cmd.hasOption("book")) {
+		if (!command.hasOption("list") && !command.hasOption("book")) {
 			throw new ParseException("Must specify one of book or list");
 		}
 		
-		if (cmd.hasOption("book") && !cmd.hasOption("time")) {
+		if (command.hasOption("book") && !command.hasOption("time")) {
 			throw new ParseException("Must specify a time to book");
 		}
 		
-		if (cmd.hasOption("court")) {
-			String court = cmd.getOptionValue("court");
+		if (command.hasOption("court")) {
+			String court = command.getOptionValue("court");
 			if (court.length() > 1 || court.contains("-") || court.contains(",") || court.contains(" ")) {
 				throw new ParseException("Specify a single court only e.g. 'a', 'B', or '5'");
 			}
 		}
 		
-		if (cmd.hasOption("time")) {
+		if (command.hasOption("time")) {
 			try {
-				int hourOfDay = Integer.parseInt(cmd.getOptionValue('t'));
+				int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
 				if (hourOfDay < VirginConstants.EARLIEST_COURT_BOOKING_TIME || hourOfDay > VirginConstants.LATEST_COURT_BOOKING_TIME) {
 					throw new ParseException("value for time must be between " + VirginConstants.EARLIEST_COURT_BOOKING_TIME + " and " + VirginConstants.LATEST_COURT_BOOKING_TIME);
 				}
@@ -115,9 +116,9 @@ public class VirginCLI implements IVirginCLI {
 		}
 
 		// verify date - assign default if necessary
-		if (cmd.hasOption("d")) {
+		if (command.hasOption("d")) {
 			try {
-				int date = Integer.parseInt(cmd.getOptionValue('d'));
+				int date = Integer.parseInt(command.getOptionValue('d'));
 				if (date < 0 || date > VirginConstants.MAX_BOOK_AHEAD_DAY) {
 					throw new ParseException("value for date must be a number between 0 and " + VirginConstants.MAX_BOOK_AHEAD_DAY);
 				}
@@ -126,7 +127,6 @@ public class VirginCLI implements IVirginCLI {
 			}
 		}
 
-		command = cmd;
 	}
 
 	public void run() throws Exception {

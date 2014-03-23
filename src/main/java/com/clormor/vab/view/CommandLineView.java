@@ -52,7 +52,7 @@ public class CommandLineView {
 			message.append(hourOfDay).append(":00 on ");
 			message.append(new SimpleDateFormat("EEE, MMM d").format(bookingTime.toDate()));
 		} else {
-			message.append("no court available");
+			message.append("No courts available");
 		}
 		
 		controller.logout();

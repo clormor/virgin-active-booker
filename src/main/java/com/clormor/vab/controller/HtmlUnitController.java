@@ -5,7 +5,9 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 
 import com.clormor.vab.model.VirginBookingDate;
@@ -30,6 +32,11 @@ public class HtmlUnitController implements IVirginController {
 	HtmlPage currentPage = null;
 
 	public HtmlUnitController() {
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+
+	    java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF); 
+	    java.util.logging.Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF);
+		
 		webClient.getOptions().setJavaScriptEnabled(true);
 	}
 
@@ -128,7 +135,7 @@ public class HtmlUnitController implements IVirginController {
 		currentPage = proceedStep4Button.click();
 		
 		HtmlSubmitInput confirmButton = currentPage.getElementByName("rpProceed_b");
-//		currentPage = confirmButton.click();
+		currentPage = confirmButton.click();
 		return result;
 	}
 	
@@ -139,7 +146,7 @@ public class HtmlUnitController implements IVirginController {
 		HtmlRadioButtonInput hourOfDayButton = getElementForBookingTime(hourOfDay);
 
 		if (hourOfDayButton == null) {
-			message.append("not available\n");
+			message.append("No courts available\n");
 			return message.toString();
 		}
 

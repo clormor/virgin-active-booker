@@ -29,9 +29,9 @@ In order to successfully use this utility, you require a valid account on the Vi
 2. Display the help message
 
 		> ./virgin-active-booker -h
-		Missing required options: u, p
 		usage: virgin-active-booker
 		 -b,--book                  book courts
+		 -court <court>             specify which court to book
 		 -d,--date <date>           the date (relative to today's date). Must be
 		                            between 0 and 7 (default: 0)
 		 -h,--help                  print this help message
@@ -46,10 +46,9 @@ In order to successfully use this utility, you require a valid account on the Vi
 3. List any available tennis courts tomorrow
 
 		> ./virgin-active-booker -u <username> -p <password> -l -d 1
-		...
 		Sun, Mar 23
 		--------------------------------
-		7:00	--> not available
+		7:00	--> No courts available
 		8:00	--> 3, 4, 5, 6, A, B, C 
 		9:00	--> 3, 5, A, B, C 
 		10:00	--> A, B, C 
@@ -62,14 +61,13 @@ In order to successfully use this utility, you require a valid account on the Vi
 		17:00	--> A, B, C 
 		18:00	--> A, B, C 
 		19:00	--> A, B, C 
-		20:00	--> not available
-		21:00	--> not available
-		22:00	--> not available
+		20:00	--> No courts available
+		21:00	--> No courts available
+		22:00	--> No courts available
 
 4. Book a court tomorrow, at 9am
 
 		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 9
-		...
 		Court 3 has been booked at 9:00 on Sun, Mar 23
 
 ## Advanced Options
@@ -77,17 +75,14 @@ In order to successfully use this utility, you require a valid account on the Vi
 1. Specify indoor/outdoor courts when booking
 
 		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 9 -outdoor
-		...
 		Court A has been booked at 9:00 on Sun, Mar 23
 		
 		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 18 -indoor
-		...
-		no court available
+		No courts available
 		
 2. Specify a specific court to book
 
 		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 8 -court 5
-		...
 		Court 5 has been booked at 8:00 on Sun, Mar 23
 		
 3. Options can be combined to broaden your selection

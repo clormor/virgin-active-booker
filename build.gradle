@@ -7,6 +7,7 @@ repositories {
 	mavenCentral()
 }
 
+version = '0.3.2'
 mainClassName = "com.clormor.vab.client.VirginCLI"
 
 dependencies {
@@ -20,3 +21,5 @@ dependencies {
 task wrapper(type: Wrapper) {
     gradleVersion = '1.11'
 }
+
+check.dependsOn jacocoTestReport
