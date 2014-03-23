@@ -26,7 +26,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
 public class HtmlUnitController implements IVirginController {
 	
-	static final int JS_TIMEOUT = 1500;
+	static final int JS_TIMEOUT = 2000;
 	private final VirginModel model = new VirginModel();
 	WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
 	HtmlPage currentPage = null;
