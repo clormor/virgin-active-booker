@@ -7,7 +7,7 @@ repositories {
 	mavenCentral()
 }
 
-version = '0.3.2'
+version = '0.3.3'
 mainClassName = "com.clormor.vab.client.VirginCLI"
 
 dependencies {
