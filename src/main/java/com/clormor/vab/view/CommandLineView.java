@@ -1,6 +1,7 @@
 package com.clormor.vab.view;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -86,9 +87,18 @@ public class CommandLineView {
 		// compile a message to print to the user
 		StringBuilder message = new StringBuilder();
 		if (allBookings != null && allBookings.size() > 0) {
-			message.append("You have " + allBookings.size() + " bookings");
+
+			int bookingNumber = 0;
+			for (VirginCourtBooking booking : allBookings) {
+				Date bookingDate = booking.getBookingTime().toDate();
+				message.append(++bookingNumber).append(". ");
+				message.append(new SimpleDateFormat("EEE MMM d, HH:mm").format(bookingDate));
+				message.append(" (Court ");
+				message.append(booking.getCourt().getName());
+				message.append(")\n");
+			}
 		} else {
-			message.append("You have no bookings");
+			message.append("You have no bookings\n");
 		}
 		
 		// logout and print the bookings
