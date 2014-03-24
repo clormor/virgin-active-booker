@@ -150,4 +150,14 @@ public class HtmlUnitControllerTest {
 		List<VirginCourtBooking> bookings = testController.getAllBookings(currentPage);
 		assertEquals(1, bookings.size());
 	}
+	
+	@Test
+	public void testNoBookings() throws Exception {
+		when(currentPage.getElementById("_ctl8_lblDate")).thenThrow(new ElementNotFoundException("", "", ""));
+		when(currentPage.getElementById("_ctl8_lblFrom")).thenThrow(new ElementNotFoundException("", "", ""));
+		when(currentPage.getElementById("_ctl8_lblRes")).thenThrow(new ElementNotFoundException("", "", ""));
+		
+		List<VirginCourtBooking> bookings = testController.getAllBookings(currentPage);
+		assertEquals(0, bookings.size());
+	}
 }

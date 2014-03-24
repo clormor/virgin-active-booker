@@ -18,6 +18,7 @@ import com.clormor.vab.model.VirginCourtBooking;
 import com.clormor.vab.model.VirginModel;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
@@ -30,18 +31,21 @@ import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
 public class HtmlUnitController implements IVirginController {
-	
+
 	static final int JS_TIMEOUT = 2000;
 	private final VirginModel model = new VirginModel();
 	WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
 	HtmlPage currentPage = null;
 
 	public HtmlUnitController() {
-		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log",
+				"org.apache.commons.logging.impl.NoOpLog");
 
-	    java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF); 
-	    java.util.logging.Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF);
-		
+		java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit")
+				.setLevel(Level.OFF);
+		java.util.logging.Logger.getLogger("org.apache.commons.httpclient")
+				.setLevel(Level.OFF);
+
 		webClient.getOptions().setJavaScriptEnabled(true);
 	}
 
@@ -83,13 +87,15 @@ public class HtmlUnitController implements IVirginController {
 
 	HtmlRadioButtonInput getElementForBookingTime(int hourOfDay) {
 		String hourOfDayRadioButtonId = "rb_" + hourOfDay + "_0";
-		return (HtmlRadioButtonInput) currentPage.getElementById(hourOfDayRadioButtonId);
+		return (HtmlRadioButtonInput) currentPage
+				.getElementById(hourOfDayRadioButtonId);
 	}
 
 	List<VirginTennisCourt> getAvailableCourts() {
 		List<VirginTennisCourt> courts = new ArrayList<VirginTennisCourt>();
 
-		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage.getElementById("alb_5");
+		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage
+				.getElementById("alb_5");
 
 		for (HtmlOption courtOption : courtsSelectElement.getOptions()) {
 			courts.add(getCourtFromText(courtOption.getText()));
@@ -107,23 +113,27 @@ public class HtmlUnitController implements IVirginController {
 				return court;
 			}
 		}
-		
-		throw new RuntimeException("Could not derive TennisCourt from String: " + courtName);
-	}
-	
-	public VirginTennisCourt bookCourt(int hourOfDay, List<String> courts, List<Boolean> environments) throws IOException {
 
-		Collection<VirginTennisCourt> potentialCourts = model.getMatchingCourts(courts, null, environments);
-		
+		throw new RuntimeException("Could not derive TennisCourt from String: "
+				+ courtName);
+	}
+
+	public VirginTennisCourt bookCourt(int hourOfDay, List<String> courts,
+			List<Boolean> environments) throws IOException {
+
+		Collection<VirginTennisCourt> potentialCourts = model
+				.getMatchingCourts(courts, null, environments);
+
 		HtmlRadioButtonInput hourOfDayButton = getElementForBookingTime(hourOfDay);
-		
+
 		if (hourOfDayButton == null) {
 			return null;
 		}
-		
+
 		currentPage = hourOfDayButton.click();
 		webClient.waitForBackgroundJavaScript(JS_TIMEOUT);
-		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage.getElementById("alb_5");
+		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage
+				.getElementById("alb_5");
 
 		VirginTennisCourt result = null;
 		List<HtmlOption> bookedCourtElements = courtsSelectElement.getOptions();
@@ -134,15 +144,17 @@ public class HtmlUnitController implements IVirginController {
 				break;
 			}
 		}
-		
-		HtmlSubmitInput proceedStep4Button = currentPage.getElementByName("rpProceed_b");
+
+		HtmlSubmitInput proceedStep4Button = currentPage
+				.getElementByName("rpProceed_b");
 		currentPage = proceedStep4Button.click();
-		
-		HtmlSubmitInput confirmButton = currentPage.getElementByName("rpProceed_b");
+
+		HtmlSubmitInput confirmButton = currentPage
+				.getElementByName("rpProceed_b");
 		currentPage = confirmButton.click();
 		return result;
 	}
-	
+
 	public String printAvailableCourts(int hourOfDay) throws IOException {
 		StringBuilder message = new StringBuilder();
 		message.append(hourOfDay).append(":00\t--> ");
@@ -167,16 +179,18 @@ public class HtmlUnitController implements IVirginController {
 	}
 
 	@Override
-	public HtmlPage login(final String username, final String password) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	public HtmlPage login(final String username, final String password)
+			throws FailingHttpStatusCodeException, MalformedURLException,
+			IOException {
 		currentPage = webClient.getPage(VirginConstants.VIRGIN_PORTAL_URL);
-		
+
 		HtmlInput usernameInput = currentPage.getElementByName("edUsername");
 		usernameInput.setValueAttribute(username);
 
 		HtmlInput passwordInput = currentPage.getElementByName("edPassword");
 		passwordInput.setValueAttribute(password);
-		
-		final HtmlSubmitInput button =  currentPage.getElementByName("btnOK");
+
+		final HtmlSubmitInput button = currentPage.getElementByName("btnOK");
 		return button.click();
 	}
 
@@ -186,49 +200,67 @@ public class HtmlUnitController implements IVirginController {
 	}
 
 	@Override
-	public void newCourtBooking(final HtmlPage currentPage, final DateTime date) throws IOException {
-		HtmlSubmitInput newBookingButton = currentPage.getElementByName("btnNB");
+	public void newCourtBooking(final HtmlPage currentPage, final DateTime date)
+			throws IOException {
+		HtmlSubmitInput newBookingButton = currentPage
+				.getElementByName("btnNB");
 		this.currentPage = newBookingButton.click();
 
-		HtmlRadioButtonInput listViewRadioButton = (HtmlRadioButtonInput) currentPage.getElementById("rbSearch");
+		HtmlRadioButtonInput listViewRadioButton = (HtmlRadioButtonInput) currentPage
+				.getElementById("rbSearch");
 		this.currentPage = listViewRadioButton.click();
-		
-		HtmlSubmitInput proceedStep2Button = currentPage.getElementByName("rpGoStep2_b");
+
+		HtmlSubmitInput proceedStep2Button = currentPage
+				.getElementByName("rpGoStep2_b");
 		this.currentPage = proceedStep2Button.click();
 
 		HtmlRadioButtonInput elementForBookingDate = getElementForBookingDate(date);
 		elementForBookingDate.setChecked(true);
 
-		HtmlSubmitInput proceedStep3Button = currentPage.getElementByName("rpProceed_b");
+		HtmlSubmitInput proceedStep3Button = currentPage
+				.getElementByName("rpProceed_b");
 		this.currentPage = proceedStep3Button.click();
 	}
 
 	@Override
 	public HtmlPage myBookings(final HtmlPage currentPage) throws Exception {
-		HtmlImageInput viewBookingsButton = currentPage.getElementByName("btnViewMy");
+		HtmlImageInput viewBookingsButton = currentPage
+				.getElementByName("btnViewMy");
 		return (HtmlPage) viewBookingsButton.click();
 	}
 
 	@Override
-	public List<VirginCourtBooking> getAllBookings(
-			HtmlPage myBookingsPage) {
+	public List<VirginCourtBooking> getAllBookings(HtmlPage myBookingsPage) {
 		List<VirginCourtBooking> bookings = new ArrayList<VirginCourtBooking>();
-		
-		// scrape the date and time elements
-		DomElement dateElement = myBookingsPage.getElementById("_ctl8_lblDate");
-		DomElement fromElement = myBookingsPage.getElementById("_ctl8_lblFrom");
 
-		// convert the date/time string into a DateTime
-		String dateTime = String.format("%s %s", dateElement.getTextContent(), fromElement.getTextContent());
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
-		DateTime bookingDate = formatter.parseDateTime(dateTime.toString());
-		
-		// scrape the court name
-		DomElement courtElement = myBookingsPage.getElementById("_ctl8_lblRes");
-		VirginTennisCourt court = getCourtFromText(courtElement.getTextContent());
-		
-		bookings.add(new VirginCourtBooking(court, bookingDate));
-		
+		try {
+			// scrape the date and time elements
+			DomElement dateElement = myBookingsPage
+					.getElementById("_ctl8_lblDate");
+			DomElement fromElement = myBookingsPage
+					.getElementById("_ctl8_lblFrom");
+
+			// scrape the court name
+			DomElement courtElement = myBookingsPage
+					.getElementById("_ctl8_lblRes");
+
+			// convert the date/time string into a DateTime
+			String dateTime = String.format("%s %s",
+					dateElement.getTextContent(), fromElement.getTextContent());
+			DateTimeFormatter formatter = DateTimeFormat
+					.forPattern("dd/MM/yyyy HH:mm");
+			DateTime bookingDate = formatter.parseDateTime(dateTime.toString());
+
+			// convert the court String to a court object
+			VirginTennisCourt court = getCourtFromText(courtElement
+					.getTextContent());
+
+			// add the booking to the return list
+			bookings.add(new VirginCourtBooking(court, bookingDate));
+		} catch (ElementNotFoundException e) {
+			return bookings;
+		}
+
 		return bookings;
 	}
 
