@@ -48,7 +48,7 @@ public class VirginCLI implements Runnable {
 				"match any outdoor courts (booking)");
 		Option book = new Option("b", "book", false, "book courts");
 		Option list = new Option("l", "list", false, "list available courts");
-		Option viewOption = new Option("v", "view", false, "view my bookings");
+		Option viewOption = new Option("v", "view", false, "view your current court bookings");
 		Option help = new Option("h", "help", false, "print this help message");
 
 		Option court = new Option("court", true, "specify which court to book");

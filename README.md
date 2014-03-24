@@ -16,6 +16,8 @@ In order to successfully use this utility, you require a valid account on the Vi
 
 	b. (Optionally) filter for indoor/outdoor courts
 
+3. View your current bookings
+
 	
 ## Running the command-line utility
 
@@ -42,6 +44,7 @@ In order to successfully use this utility, you require a valid account on the Vi
 		 -t,--time <time>           hour of day to list or book courts (24-hour
 		                            format)
 		 -u,--username <username>   your member's portal username
+		 -v,--view <username>       view your current court bookings
 		 
 3. List any available tennis courts tomorrow
 
@@ -69,6 +72,11 @@ In order to successfully use this utility, you require a valid account on the Vi
 
 		> ./virgin-active-booker -u <username> -p <password> -b -d 1 -t 9
 		Court 3 has been booked at 9:00 on Sun, Mar 23
+
+5. View your bookings
+
+		> ./virgin-active-booker -u <username> -p <password> -v
+		1. Sun Mar 23, 09:00 (Court 3)
 
 ## Advanced Options
 
