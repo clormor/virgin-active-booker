@@ -29,6 +29,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
+import com.google.common.collect.Iterables;
 
 public class HtmlUnitController implements IVirginController {
 
@@ -229,36 +230,36 @@ public class HtmlUnitController implements IVirginController {
 		return (HtmlPage) viewBookingsButton.click();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<VirginCourtBooking> getAllBookings(HtmlPage myBookingsPage) {
 		List<VirginCourtBooking> bookings = new ArrayList<VirginCourtBooking>();
 
-		try {
-			// scrape the date and time elements
-			DomElement dateElement = myBookingsPage
-					.getElementById("_ctl8_lblDate");
-			DomElement fromElement = myBookingsPage
-					.getElementById("_ctl8_lblFrom");
-
-			// scrape the court name
-			DomElement courtElement = myBookingsPage
-					.getElementById("_ctl8_lblRes");
-
-			// convert the date/time string into a DateTime
-			String dateTime = String.format("%s %s",
-					dateElement.getTextContent(), fromElement.getTextContent());
-			DateTimeFormatter formatter = DateTimeFormat
-					.forPattern("dd/MM/yyyy HH:mm");
-			DateTime bookingDate = formatter.parseDateTime(dateTime.toString());
-
-			// convert the court String to a court object
-			VirginTennisCourt court = getCourtFromText(courtElement
-					.getTextContent());
-
-			// add the booking to the return list
-			bookings.add(new VirginCourtBooking(court, bookingDate));
-		} catch (ElementNotFoundException e) {
+		// retrieve all bookings in the page using an xpath query
+		List<DomElement> bookingNodes = (List<DomElement>) myBookingsPage.getByXPath("/html/body/form/table/tbody/tr/td/table/tbody/tr/td[@id='tcGrid']/ul");
+		if (bookingNodes == null) {
 			return bookings;
+		}
+
+		for (DomElement bookingNode : bookingNodes) {
+			// check the header says 'Tennis Court'
+			DomElement header = Iterables.getOnlyElement((List<DomElement>)bookingNode.getByXPath("li[@class='ul_pnl_h']/span[1]"));
+			if (header.getTextContent().equals("Tennis Court")) {
+				
+				// get the date/time
+				DomElement dateNode = Iterables.getOnlyElement((List<DomElement>) bookingNode.getByXPath("li[3]/span[2]"));
+				DomElement timeNode = Iterables.getOnlyElement((List<DomElement>) bookingNode.getByXPath("li[3]/span[4]"));
+				String dateTime = String.format("%s %s", dateNode.getTextContent(), timeNode.getTextContent());
+				DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+				DateTime bookingDate = formatter.parseDateTime(dateTime.toString());
+				
+				// get the court
+				DomElement courtNode = Iterables.getOnlyElement((List<DomElement>) bookingNode.getByXPath("li[@class='ul_pnl_rowb']/span[2]"));
+				VirginTennisCourt court = getCourtFromText(courtNode.getTextContent());
+				
+				// add the booking to the return list
+				bookings.add(new VirginCourtBooking(court, bookingDate));
+			}
 		}
 
 		return bookings;

@@ -4,10 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doReturn;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -61,6 +65,30 @@ public class HtmlUnitControllerTest {
 	
 	@Mock
 	private DomElement mockElement3;
+	
+	@Mock
+	private DomElement mockElement4;
+	
+	@Mock
+	private DomElement mockElement5;
+	
+	@Mock
+	private DomElement mockElement6;
+	
+	@Mock
+	private DomElement mockElement7;
+	
+	@Mock
+	private DomElement mockElement8;
+	
+	@Mock
+	private DomElement mockElement9;
+
+	@Mock
+	private DomElement mockElement10;
+	
+	@Mock
+	private DomElement mockElement11;
 	
 	@Mock
 	private HtmlImageInput mockImageInput;
@@ -140,24 +168,93 @@ public class HtmlUnitControllerTest {
 	
 	@Test
 	public void testOneBooking() throws Exception {
-		when(currentPage.getElementById("_ctl8_lblDate")).thenReturn(mockElement1);
-		when(currentPage.getElementById("_ctl8_lblFrom")).thenReturn(mockElement2);
-		when(currentPage.getElementById("_ctl8_lblRes")).thenReturn(mockElement3);
-		when(mockElement1.getTextContent()).thenReturn("30/03/2014");
-		when(mockElement2.getTextContent()).thenReturn("21:00");
-		when(mockElement3.getTextContent()).thenReturn("Indoor Tennis Court 1");
+		List<DomElement> bookings = Arrays.asList(mockElement1);
+		List<DomElement> standardHeader = Arrays.asList(mockElement2);
+		List<DomElement> date1 = Arrays.asList(mockElement3);
+		List<DomElement> time1 = Arrays.asList(mockElement4);
+		List<DomElement> court1 = Arrays.asList(mockElement5);
 		
-		List<VirginCourtBooking> bookings = testController.getAllBookings(currentPage);
-		assertEquals(1, bookings.size());
+		doReturn(bookings).when(currentPage).getByXPath("/html/body/form/table/tbody/tr/td/table/tbody/tr/td[@id='tcGrid']/ul");
+		
+		doReturn(standardHeader).when(mockElement1).getByXPath("li[@class='ul_pnl_h']/span[1]");
+		
+		when(mockElement2.getTextContent()).thenReturn("Tennis Court");
+		
+		doReturn(date1).when(mockElement1).getByXPath("li[3]/span[2]");
+		doReturn(time1).when(mockElement1).getByXPath("li[3]/span[4]");
+		
+		when(mockElement3.getTextContent()).thenReturn("28/03/2014");
+		when(mockElement4.getTextContent()).thenReturn("11:00");
+		
+		doReturn(court1).when(mockElement1).getByXPath("li[@class='ul_pnl_rowb']/span[2]");
+		
+		when(mockElement5.getTextContent()).thenReturn("Indoor Court 3");
+		
+		List<VirginCourtBooking> allBookings = testController.getAllBookings(currentPage);
+		assertEquals(1, allBookings.size());
+		assertEquals(VirginTennisCourt.COURT_3, allBookings.get(0).getCourt());
+		
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+		DateTime dateTime1 = formatter.parseDateTime("28/03/2014 11:00");
+		
+		assertEquals(dateTime1, allBookings.get(0).getBookingTime());
 	}
 	
 	@Test
 	public void testNoBookings() throws Exception {
-		when(currentPage.getElementById("_ctl8_lblDate")).thenThrow(new ElementNotFoundException("", "", ""));
-		when(currentPage.getElementById("_ctl8_lblFrom")).thenThrow(new ElementNotFoundException("", "", ""));
-		when(currentPage.getElementById("_ctl8_lblRes")).thenThrow(new ElementNotFoundException("", "", ""));
+		when(currentPage.getByXPath("/html/body/form/table/tbody/tr/td/table/tbody/tr/td[@id='tcGrid']/ul")).thenReturn(null);
 		
 		List<VirginCourtBooking> bookings = testController.getAllBookings(currentPage);
 		assertEquals(0, bookings.size());
+	}
+	
+	@Test
+	public void testMultipleBookings() throws Exception {
+		List<DomElement> bookings = Arrays.asList(mockElement1, mockElement2, mockElement3);
+		List<DomElement> standardHeader = Arrays.asList(mockElement4);
+		List<DomElement> nonStandardHeader = Arrays.asList(mockElement5);
+		List<DomElement> date1 = Arrays.asList(mockElement6);
+		List<DomElement> time1 = Arrays.asList(mockElement7);
+		List<DomElement> date2 = Arrays.asList(mockElement8);
+		List<DomElement> time2 = Arrays.asList(mockElement9);
+		List<DomElement> court1 = Arrays.asList(mockElement10);
+		List<DomElement> court2 = Arrays.asList(mockElement11);
+		
+		doReturn(bookings).when(currentPage).getByXPath("/html/body/form/table/tbody/tr/td/table/tbody/tr/td[@id='tcGrid']/ul");
+		
+		doReturn(standardHeader).when(mockElement1).getByXPath("li[@class='ul_pnl_h']/span[1]");
+		doReturn(standardHeader).when(mockElement2).getByXPath("li[@class='ul_pnl_h']/span[1]");
+		doReturn(nonStandardHeader).when(mockElement3).getByXPath("li[@class='ul_pnl_h']/span[1]");
+		
+		when(mockElement4.getTextContent()).thenReturn("Tennis Court");
+		when(mockElement5.getTextContent()).thenReturn("Something Else");
+		
+		doReturn(date1).when(mockElement1).getByXPath("li[3]/span[2]");
+		doReturn(time1).when(mockElement1).getByXPath("li[3]/span[4]");
+		doReturn(date2).when(mockElement2).getByXPath("li[3]/span[2]");
+		doReturn(time2).when(mockElement2).getByXPath("li[3]/span[4]");
+		
+		when(mockElement6.getTextContent()).thenReturn("20/03/2014");
+		when(mockElement7.getTextContent()).thenReturn("09:00");
+		when(mockElement8.getTextContent()).thenReturn("22/03/2014");
+		when(mockElement9.getTextContent()).thenReturn("20:00");
+		
+		doReturn(court1).when(mockElement1).getByXPath("li[@class='ul_pnl_rowb']/span[2]");
+		doReturn(court2).when(mockElement2).getByXPath("li[@class='ul_pnl_rowb']/span[2]");
+		
+		when(mockElement10.getTextContent()).thenReturn("Indoor Court 2");
+		when(mockElement11.getTextContent()).thenReturn("Outdoor Court A");
+		
+		List<VirginCourtBooking> allBookings = testController.getAllBookings(currentPage);
+		assertEquals(2, allBookings.size());
+		assertEquals(VirginTennisCourt.COURT_2, allBookings.get(0).getCourt());
+		assertEquals(VirginTennisCourt.COURT_A, allBookings.get(1).getCourt());
+		
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+		DateTime dateTime1 = formatter.parseDateTime("20/03/2014 09:00");
+		DateTime dateTime2 = formatter.parseDateTime("22/03/2014 20:00");
+		
+		assertEquals(dateTime1, allBookings.get(0).getBookingTime());
+		assertEquals(dateTime2, allBookings.get(1).getBookingTime());
 	}
 }
