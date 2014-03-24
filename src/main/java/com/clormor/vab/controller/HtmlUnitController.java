@@ -218,12 +218,8 @@ public class HtmlUnitController implements IVirginController {
 		DomElement dateElement = myBookingsPage.getElementById("_ctl8_lblDate");
 		DomElement fromElement = myBookingsPage.getElementById("_ctl8_lblFrom");
 
-		// parse the date and time into a string
-		StringBuilder dateTime = new StringBuilder(dateElement.getTextContent());
-		dateTime.append(" ");
-		dateTime.append(fromElement.getTextContent());
-		
 		// convert the date/time string into a DateTime
+		String dateTime = String.format("%s %s", dateElement.getTextContent(), fromElement.getTextContent());
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
 		DateTime bookingDate = formatter.parseDateTime(dateTime.toString());
 		

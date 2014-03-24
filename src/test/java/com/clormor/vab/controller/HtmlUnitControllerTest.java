@@ -8,8 +8,6 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,6 +17,7 @@ import com.clormor.vab.model.VirginCourtBooking;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -53,6 +52,15 @@ public class HtmlUnitControllerTest {
 	
 	@Mock
 	private HtmlOption option3;
+	
+	@Mock
+	private DomElement mockElement1;
+	
+	@Mock
+	private DomElement mockElement2;
+	
+	@Mock
+	private DomElement mockElement3;
 	
 	@Mock
 	private HtmlImageInput mockImageInput;
@@ -130,11 +138,16 @@ public class HtmlUnitControllerTest {
 		testController.myBookings(currentPage);
 	}
 	
-//	@Test
-//	public void testOneBooking() throws Exception {
-//		
-//		
-//		List<VirginCourtBooking> bookings = testController.getAllBookings(currentPage);
-//		assertEquals(1, bookings.size());
-//	}
+	@Test
+	public void testOneBooking() throws Exception {
+		when(currentPage.getElementById("_ctl8_lblDate")).thenReturn(mockElement1);
+		when(currentPage.getElementById("_ctl8_lblFrom")).thenReturn(mockElement2);
+		when(currentPage.getElementById("_ctl8_lblRes")).thenReturn(mockElement3);
+		when(mockElement1.getTextContent()).thenReturn("30/03/2014");
+		when(mockElement2.getTextContent()).thenReturn("21:00");
+		when(mockElement3.getTextContent()).thenReturn("Indoor Tennis Court 1");
+		
+		List<VirginCourtBooking> bookings = testController.getAllBookings(currentPage);
+		assertEquals(1, bookings.size());
+	}
 }
