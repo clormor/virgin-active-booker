@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 
@@ -17,7 +18,6 @@ import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
@@ -205,6 +205,13 @@ public class HtmlUnitController implements IVirginController {
 	public HtmlPage myBookings(final HtmlPage currentPage) throws Exception {
 		HtmlImageInput viewBookingsButton = currentPage.getElementByName("btnViewMy");
 		return (HtmlPage) viewBookingsButton.click();
+	}
+
+	@Override
+	public List<Pair<VirginTennisCourt, DateTime>> getAllBookings(
+			HtmlPage myBookingsPage) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.clormor.vab.controller;
 
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 
 import com.clormor.vab.model.VirginTennisCourt;
@@ -20,4 +21,7 @@ public interface IVirginController {
 	void newCourtBooking(final HtmlPage currentPage, final DateTime date) throws Exception;
 	
 	HtmlPage myBookings(final HtmlPage currentPage) throws Exception;
+
+	List<Pair<VirginTennisCourt, DateTime>> getAllBookings(
+			HtmlPage myBookingsPage);
 }
