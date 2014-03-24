@@ -18,7 +18,6 @@ In order to successfully use this utility, you require a valid account on the Vi
 
 3. View your current bookings
 
-	
 ## Running the command-line utility
 
 1. Build the code
@@ -76,7 +75,8 @@ In order to successfully use this utility, you require a valid account on the Vi
 5. View your bookings
 
 		> ./virgin-active-booker -u <username> -p <password> -v
-		1. Sun Mar 23, 09:00 (Court 3)
+		1. Mon Mar 24, 08:00 (Court 2)
+		2. Sun Mar 30, 21:00 (Court 5)
 
 ## Advanced Options
 
