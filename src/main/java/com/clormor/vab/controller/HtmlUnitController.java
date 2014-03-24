@@ -7,17 +7,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.clormor.vab.model.VirginBookingDate;
 import com.clormor.vab.model.VirginConstants;
+import com.clormor.vab.model.VirginCourtBooking;
 import com.clormor.vab.model.VirginModel;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
@@ -89,14 +92,13 @@ public class HtmlUnitController implements IVirginController {
 		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage.getElementById("alb_5");
 
 		for (HtmlOption courtOption : courtsSelectElement.getOptions()) {
-			courts.add(getCourtFromOption(courtOption));
+			courts.add(getCourtFromText(courtOption.getText()));
 		}
 
 		return courts;
 	}
 
-	VirginTennisCourt getCourtFromOption(HtmlOption courtOption) {
-		String courtName = courtOption.getText();
+	VirginTennisCourt getCourtFromText(final String courtName) {
 		String lastChar = courtName.substring(courtName.length() - 1,
 				courtName.length());
 
@@ -106,7 +108,7 @@ public class HtmlUnitController implements IVirginController {
 			}
 		}
 		
-		throw new RuntimeException("Could not derive TennisCourt from HtmlOption: " + courtOption.getText());
+		throw new RuntimeException("Could not derive TennisCourt from String: " + courtName);
 	}
 	
 	public VirginTennisCourt bookCourt(int hourOfDay, List<String> courts, List<Boolean> environments) throws IOException {
@@ -126,7 +128,7 @@ public class HtmlUnitController implements IVirginController {
 		VirginTennisCourt result = null;
 		List<HtmlOption> bookedCourtElements = courtsSelectElement.getOptions();
 		for (HtmlOption option : bookedCourtElements) {
-			VirginTennisCourt court = getCourtFromOption(option);
+			VirginTennisCourt court = getCourtFromText(option.getText());
 			if (potentialCourts.contains(court)) {
 				result = court;
 				break;
@@ -208,10 +210,30 @@ public class HtmlUnitController implements IVirginController {
 	}
 
 	@Override
-	public List<Pair<VirginTennisCourt, DateTime>> getAllBookings(
+	public List<VirginCourtBooking> getAllBookings(
 			HtmlPage myBookingsPage) {
-		// TODO Auto-generated method stub
-		return null;
+		List<VirginCourtBooking> bookings = new ArrayList<VirginCourtBooking>();
+		
+		// scrape the date and time elements
+		DomElement dateElement = myBookingsPage.getElementById("_ctl8_lblDate");
+		DomElement fromElement = myBookingsPage.getElementById("_ctl8_lblFrom");
+
+		// parse the date and time into a string
+		StringBuilder dateTime = new StringBuilder(dateElement.getTextContent());
+		dateTime.append(" ");
+		dateTime.append(fromElement.getTextContent());
+		
+		// convert the date/time string into a DateTime
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+		DateTime bookingDate = formatter.parseDateTime(dateTime.toString());
+		
+		// scrape the court name
+		DomElement courtElement = myBookingsPage.getElementById("_ctl8_lblRes");
+		VirginTennisCourt court = getCourtFromText(courtElement.getTextContent());
+		
+		bookings.add(new VirginCourtBooking(court, bookingDate));
+		
+		return bookings;
 	}
 
 }

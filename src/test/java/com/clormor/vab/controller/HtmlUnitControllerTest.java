@@ -8,11 +8,14 @@ import static org.mockito.Mockito.when;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.clormor.vab.model.VirginCourtBooking;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -126,4 +129,12 @@ public class HtmlUnitControllerTest {
 		when(currentPage.getElementByName("btnViewMy")).thenThrow(new ElementNotFoundException("", "", ""));
 		testController.myBookings(currentPage);
 	}
+	
+//	@Test
+//	public void testOneBooking() throws Exception {
+//		
+//		
+//		List<VirginCourtBooking> bookings = testController.getAllBookings(currentPage);
+//		assertEquals(1, bookings.size());
+//	}
 }

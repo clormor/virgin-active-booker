@@ -3,12 +3,12 @@ package com.clormor.vab.view;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 
 import com.clormor.vab.controller.HtmlUnitController;
 import com.clormor.vab.controller.IVirginController;
 import com.clormor.vab.model.VirginConstants;
+import com.clormor.vab.model.VirginCourtBooking;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
@@ -81,7 +81,7 @@ public class CommandLineView {
 		HtmlPage myBookingsPage = controller.myBookings(homePage);
 		
 		// parse the bookings listed in the current page
-		List<Pair<VirginTennisCourt, DateTime>> allBookings = controller.getAllBookings(myBookingsPage);
+		List<VirginCourtBooking> allBookings = controller.getAllBookings(myBookingsPage);
 		
 		// compile a message to print to the user
 		StringBuilder message = new StringBuilder();
