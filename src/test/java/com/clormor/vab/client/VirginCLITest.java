@@ -1,161 +1,180 @@
 package com.clormor.vab.client;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import org.apache.commons.cli.ParseException;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.clormor.vab.view.CommandLineView;
 
 public class VirginCLITest {
 
 	private VirginCLI testCli;
 	
+	@Mock
+	CommandLineView view;
+	
 	@Before
-	public void setup() {
-		testCli = new TestCLI();
+	public void setup() throws Exception {
+		MockitoAnnotations.initMocks(this);
 	}
 	
 	@Test (expected = ParseException.class)
 	public void parseNoArgs() throws ParseException {
 		String[] args = {""};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test (expected = ParseException.class)
 	public void parseBookAndList() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-list", "-book"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test (expected = ParseException.class)
 	public void parseNoBookOrList() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test
-	public void defaultDate() throws ParseException {
+	public void defaultDate() throws Exception {
+		doNothing().when(view).printAvailableCourts(any(DateTime.class));
+		
 		String[] args = {"-u", "me", "-p", "whatever", "-l"};
-		testCli.processArgs(args);
-		assertEquals(testCli.getRelativeDate(),0);
+		VirginCLI cli = new TestCLI(args, view);
+		
+		assertEquals(cli.getRelativeDate(),0);
 	}
 
 	@Test (expected = ParseException.class)
 	public void nonNumericDate() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-list", "-d", "blah"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test (expected = ParseException.class)
 	public void dateOutOfRange() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-list", "-d", "9"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test
 	public void helpCalledOnly() throws Exception {
 		String[] args = {"-u", "me", "-p", "whatever", "-b", "-help", "-t", "20"};
-		testCli.processArgs(args);
-		testCli.run();
+		new TestCLI(args, view).run();
 		
-		assertTrue(((TestCLI) testCli).helpDisplayed);
-		assertFalse(((TestCLI) testCli).listed);
-		assertFalse(((TestCLI) testCli).booked);
+		verify(view, never()).bookCourts(any(DateTime.class), anyInt(), anyListOf(String.class), anyListOf(Boolean.class));
 		
 		String[] args2 = {"-u", "me", "-p", "whatever", "-list", "-h", "-t", "20"};
-		testCli.processArgs(args2);
-		testCli.run();
+		new VirginCLI(args2).run();
 		
-		assertTrue(((TestCLI) testCli).helpDisplayed);
-		assertFalse(((TestCLI) testCli).listed);
-		assertFalse(((TestCLI) testCli).booked);
+		verify(view, never()).printAvailableCourts(any(DateTime.class));
 	}
 
 	@Test
 	public void listCallsList() throws ParseException, Exception {
+		doNothing().when(view).printAvailableCourts(any(DateTime.class));;
+
 		String[] args = {"-u", "me", "-p", "whatever", "-l"};
-		testCli.processArgs(args);
-		testCli.run();
+		new TestCLI(args, view).run();
 		
-		assertFalse(((TestCLI) testCli).helpDisplayed);
-		assertTrue(((TestCLI) testCli).listed);
-		assertFalse(((TestCLI) testCli).booked);		
+		verify(view, times(1)).printAvailableCourts(any(DateTime.class));
 	}
 	
 	@Test
 	public void bookCallsBook() throws Exception {
-		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "19"};
-		testCli.processArgs(args);
-		testCli.run();
+		doNothing().when(view).bookCourts(any(DateTime.class), anyInt(), anyListOf(String.class), anyListOf(Boolean.class));
 		
-		assertFalse(((TestCLI) testCli).helpDisplayed);
-		assertFalse(((TestCLI) testCli).listed);
-		assertTrue(((TestCLI) testCli).booked);		
+		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "19"};
+		
+		new TestCLI(args, view).run();
+		
+		verify(view, times(1)).bookCourts(any(DateTime.class), anyInt(), anyListOf(String.class), anyListOf(Boolean.class));
 	}
 	
 	@Test (expected = ParseException.class)
 	public void bookNoTime() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test (expected=ParseException.class)
 	public void timeOutOfRange() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "23"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test (expected=ParseException.class)
 	public void timeNaN() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "blah"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 
 	@Test
 	public void indoorOption() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-indoor"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test
 	public void outdoorOption() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-outdoor"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test
 	public void courtOption() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-court", "1"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test (expected=ParseException.class)
 	public void courtList() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "9", "-court", "1,2"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test
-	public void view() throws ParseException {
+	public void view() throws Exception {
 		String[] args = {"-u", "me", "-p", "whatever", "-view"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 		
 		String[] args2 = {"-u", "me", "-p", "whatever", "-v"};
-		testCli.processArgs(args2);
+		new VirginCLI(args2);
 	}
 	
 	@Test (expected=ParseException.class)
 	public void viewAndBook() throws ParseException {
 		String[] args = {"-u", "me", "-p", "whatever", "-v", "-b", "-d", "2", "-t", "1"};
-		testCli.processArgs(args);
+		new VirginCLI(args);
 	}
 	
 	@Test (expected=ParseException.class)
 	public void viewAndList() throws ParseException {	
 		String[] args2 = {"-u", "me", "-p", "whatever", "-v", "-l", "-d", "2"};
-		testCli.processArgs(args2);
+		new VirginCLI(args2);
+	}
+	
+	@Test
+	public void viewCallsView() throws Exception {
+		doNothing().when(view).viewBookings();
+		
+		String[] args = {"-u", "me", "-p", "whatever", "-v"};
+		new TestCLI(args, view).run();
+		
+		verify(view, times(1)).viewBookings();
 	}
 }
 

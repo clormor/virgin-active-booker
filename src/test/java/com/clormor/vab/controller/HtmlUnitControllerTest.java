@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
@@ -49,6 +50,9 @@ public class HtmlUnitControllerTest {
 	
 	@Mock
 	private HtmlOption option3;
+	
+	@Mock
+	private HtmlImageInput mockImageInput;
 	
 	@Before
 	public void setup() {
@@ -110,8 +114,8 @@ public class HtmlUnitControllerTest {
 	
 	@Test
 	public void testMyBookings() throws Exception {
-		when(currentPage.getElementByName("btnViewMy")).thenReturn(mockSubmit);
-		when(mockSubmit.click()).thenReturn(currentPage);
+		when(currentPage.getElementByName("btnViewMy")).thenReturn(mockImageInput);
+		when(mockImageInput.click()).thenReturn(currentPage);
 		
 		HtmlPage newPage = testController.myBookings(currentPage);
 		assertNotNull(newPage);

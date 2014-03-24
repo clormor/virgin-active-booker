@@ -18,6 +18,7 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.HtmlImageInput;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -202,8 +203,8 @@ public class HtmlUnitController implements IVirginController {
 
 	@Override
 	public HtmlPage myBookings(final HtmlPage currentPage) throws Exception {
-		HtmlSubmitInput viewBookingsButton = currentPage.getElementByName("btnViewMy");
-		return viewBookingsButton.click();
+		HtmlImageInput viewBookingsButton = currentPage.getElementByName("btnViewMy");
+		return (HtmlPage) viewBookingsButton.click();
 	}
 
 }

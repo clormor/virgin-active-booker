@@ -59,7 +59,7 @@ public class CommandLineView {
 		controller.logout();
 		System.out.println(message);
 	}
-	
+
 	public void viewBookings() throws Exception {
 		HtmlPage homePage = controller.login(username, password);
 		

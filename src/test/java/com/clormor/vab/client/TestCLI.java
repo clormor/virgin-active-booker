@@ -1,23 +1,13 @@
 package com.clormor.vab.client;
 
+import org.apache.commons.cli.ParseException;
+
+import com.clormor.vab.view.CommandLineView;
+
 public class TestCLI extends VirginCLI {
 
-	boolean helpDisplayed = false;
-	boolean listed = false;
-	boolean booked = false;
-	
-	@Override
-	public void printHelpMessage() {
-		helpDisplayed = true;
-	}
-	
-	@Override
-	void listCourts() {
-		listed = true;
-	}
-	
-	@Override
-	void bookCourts() {
-		booked = true;
+	public TestCLI(String[] args, CommandLineView view) throws ParseException {
+		super(args);
+		this.view = view;
 	}
 }
