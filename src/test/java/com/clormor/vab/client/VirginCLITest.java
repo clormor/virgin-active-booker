@@ -20,8 +20,6 @@ import com.clormor.vab.view.CommandLineView;
 
 public class VirginCLITest {
 
-	private VirginCLI testCli;
-	
 	@Mock
 	CommandLineView view;
 	

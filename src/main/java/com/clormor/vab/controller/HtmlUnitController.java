@@ -18,7 +18,6 @@ import com.clormor.vab.model.VirginCourtBooking;
 import com.clormor.vab.model.VirginModel;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomElement;
