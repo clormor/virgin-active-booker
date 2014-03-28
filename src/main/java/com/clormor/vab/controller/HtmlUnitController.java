@@ -206,18 +206,18 @@ public class HtmlUnitController implements IVirginController {
 				.getElementByName("btnNB");
 		this.currentPage = newBookingButton.click();
 
-		HtmlRadioButtonInput listViewRadioButton = (HtmlRadioButtonInput) currentPage
+		HtmlRadioButtonInput listViewRadioButton = (HtmlRadioButtonInput) this.currentPage
 				.getElementById("rbSearch");
 		this.currentPage = listViewRadioButton.click();
 
-		HtmlSubmitInput proceedStep2Button = currentPage
+		HtmlSubmitInput proceedStep2Button = this.currentPage
 				.getElementByName("rpGoStep2_b");
 		this.currentPage = proceedStep2Button.click();
 
 		HtmlRadioButtonInput elementForBookingDate = getElementForBookingDate(date);
 		elementForBookingDate.setChecked(true);
 
-		HtmlSubmitInput proceedStep3Button = currentPage
+		HtmlSubmitInput proceedStep3Button = this.currentPage
 				.getElementByName("rpProceed_b");
 		this.currentPage = proceedStep3Button.click();
 	}
