@@ -32,9 +32,9 @@ import com.google.common.collect.Iterables;
 
 public class HtmlUnitController implements IVirginController {
 
-	static final int JS_TIMEOUT = 2000;
 	private final VirginModel model = new VirginModel();
-	WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
+	WebClient client = new WebClient(BrowserVersion.FIREFOX_24);
+	
 	HtmlPage currentPage = null;
 
 	public HtmlUnitController() {
@@ -46,7 +46,16 @@ public class HtmlUnitController implements IVirginController {
 		java.util.logging.Logger.getLogger("org.apache.commons.httpclient")
 				.setLevel(Level.OFF);
 
-		webClient.getOptions().setJavaScriptEnabled(true);
+		client.getOptions().setJavaScriptEnabled(true);
+	    client.getOptions().setTimeout(60000);
+	    client.getOptions().setRedirectEnabled(true);
+	    client.getOptions().setJavaScriptEnabled(true);
+	    client.getOptions().setThrowExceptionOnFailingStatusCode(false);
+	    client.getOptions().setThrowExceptionOnScriptError(false);
+	    client.getOptions().setCssEnabled(false);
+	    client.getOptions().setAppletEnabled(false);
+	    client.getOptions().setActiveXNative(false);
+	    client.getOptions().setUseInsecureSSL(true);
 	}
 
 	HtmlRadioButtonInput getElementForBookingDate(DateTime date) {
@@ -131,7 +140,8 @@ public class HtmlUnitController implements IVirginController {
 		}
 
 		currentPage = hourOfDayButton.click();
-		webClient.waitForBackgroundJavaScript(JS_TIMEOUT);
+		waitForJavaScript();
+		
 		HtmlSelect courtsSelectElement = (HtmlSelect) currentPage
 				.getElementById("alb_5");
 
@@ -151,7 +161,7 @@ public class HtmlUnitController implements IVirginController {
 
 		HtmlSubmitInput confirmButton = currentPage
 				.getElementByName("rpProceed_b");
-		currentPage = confirmButton.click();
+//		currentPage = confirmButton.click();
 		return result;
 	}
 
@@ -167,8 +177,8 @@ public class HtmlUnitController implements IVirginController {
 		}
 
 		currentPage = hourOfDayButton.click();
-		webClient.waitForBackgroundJavaScript(JS_TIMEOUT);
-
+		waitForJavaScript();
+		
 		for (VirginTennisCourt court : getAvailableCourts()) {
 			message.append(court.getName()).append(", ");
 		}
@@ -182,7 +192,7 @@ public class HtmlUnitController implements IVirginController {
 	public HtmlPage login(final String username, final String password)
 			throws FailingHttpStatusCodeException, MalformedURLException,
 			IOException {
-		currentPage = webClient.getPage(VirginConstants.VIRGIN_PORTAL_URL);
+		currentPage = client.getPage(VirginConstants.VIRGIN_PORTAL_URL);
 
 		HtmlInput usernameInput = currentPage.getElementByName("edUsername");
 		usernameInput.setValueAttribute(username);
@@ -196,7 +206,7 @@ public class HtmlUnitController implements IVirginController {
 
 	@Override
 	public void logout() {
-		webClient.closeAllWindows();
+		client.closeAllWindows();
 	}
 
 	@Override
@@ -262,6 +272,23 @@ public class HtmlUnitController implements IVirginController {
 		}
 
 		return bookings;
+	}
+	
+	/**
+	 * <p>Pauses execution until JavaScript processes complete, or throws a run-time exception if it times out.</p>
+	 */
+	private void waitForJavaScript() {
+		int maxTries = 10;
+		int processesStillExecuting = 1;
+		
+		while (processesStillExecuting > 0 & maxTries > 0) {
+			maxTries --;
+			processesStillExecuting = client.waitForBackgroundJavaScript(2000);
+		}
+		
+		if (processesStillExecuting != 0) {
+			throw new RuntimeException("failed to execute java script, timing out!");
+		}
 	}
 
 }

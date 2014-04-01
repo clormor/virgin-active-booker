@@ -6,7 +6,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 public class VirginTestController extends HtmlUnitController {
 
 	public VirginTestController(WebClient client, HtmlPage currentPage) {
-		this.webClient = client;
+		this.client = client;
 		this.currentPage = currentPage;
 	}
 	
