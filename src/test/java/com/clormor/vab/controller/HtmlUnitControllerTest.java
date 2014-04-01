@@ -3,8 +3,9 @@ package com.clormor.vab.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
@@ -105,7 +106,7 @@ public class HtmlUnitControllerTest {
 		List<HtmlOption> options = Arrays.asList(option1, option2);
 		when(currentPage.getElementById("rb_9_0")).thenReturn(mockRadioButton);
 		when(mockRadioButton.click()).thenReturn(currentPage);
-		when(client.waitForBackgroundJavaScript(HtmlUnitController.JS_TIMEOUT)).thenReturn(0);
+		when(client.waitForBackgroundJavaScript(anyInt())).thenReturn(0);
 		when(currentPage.getElementById("alb_5")).thenReturn(mockSelect);
 		when(mockSelect.getOptions()).thenReturn(options);
 		when(option1.getText()).thenReturn("Outdoor Court A");
@@ -122,7 +123,7 @@ public class HtmlUnitControllerTest {
 		List<HtmlOption> options = Arrays.asList(option1, option2);
 		when(currentPage.getElementById("rb_9_0")).thenReturn(mockRadioButton);
 		when(mockRadioButton.click()).thenReturn(currentPage);
-		when(client.waitForBackgroundJavaScript(HtmlUnitController.JS_TIMEOUT)).thenReturn(0);
+		when(client.waitForBackgroundJavaScript(anyInt())).thenReturn(0);
 		when(currentPage.getElementById("alb_5")).thenReturn(mockSelect);
 		when(mockSelect.getOptions()).thenReturn(options);
 		when(option1.getText()).thenReturn("Indoor Court 1");
@@ -139,7 +140,7 @@ public class HtmlUnitControllerTest {
 		List<HtmlOption> options = Arrays.asList(option1, option2);
 		when(currentPage.getElementById("rb_9_0")).thenReturn(mockRadioButton);
 		when(mockRadioButton.click()).thenReturn(currentPage);
-		when(client.waitForBackgroundJavaScript(HtmlUnitController.JS_TIMEOUT)).thenReturn(0);
+		when(client.waitForBackgroundJavaScript(anyInt())).thenReturn(0);
 		when(currentPage.getElementById("alb_5")).thenReturn(mockSelect);
 		when(mockSelect.getOptions()).thenReturn(options);
 		when(option1.getText()).thenReturn("Indoor Court 1");

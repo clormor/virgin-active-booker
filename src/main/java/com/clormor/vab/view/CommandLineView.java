@@ -13,11 +13,11 @@ import com.clormor.vab.model.VirginCourtBooking;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
-public class CommandLineView {
+public class CommandLineView implements ICommandLineView {
 
-	private final String username;
-	private final String password;
-	private final IVirginController controller;
+	final String username;
+	final String password;
+	IVirginController controller;
 
 	public CommandLineView(String username, String password) {
 		this.username = username;
@@ -25,6 +25,7 @@ public class CommandLineView {
 		controller = new HtmlUnitController();
 	}
 
+	@Override
 	public void printAvailableCourts(DateTime date) throws Exception {
 		// login
 		HtmlPage homePage = controller.login(username, password);
@@ -47,12 +48,15 @@ public class CommandLineView {
 		System.out.println(message);
 	}
 
-	public void bookCourts(DateTime date, int hourOfDay, List<String> courts, List<Boolean> environments) throws Exception {
+	@Override
+	public String bookCourts(DateTime date, int hourOfDay, List<String> courts, List<Boolean> environments) throws Exception {
 		// login
 		HtmlPage homePage = controller.login(username, password);
+		
+		DateTime beginningOfDay = date.dayOfMonth().roundFloorCopy();
 
 		// navigate to the court bookings page
-		controller.newCourtBooking(homePage, date);
+		controller.newCourtBooking(homePage, beginningOfDay);
 
 		// book a tennis court, if a suitable court is available
 		VirginTennisCourt court = controller.bookCourt(hourOfDay, courts, environments);
@@ -63,7 +67,7 @@ public class CommandLineView {
 			message.append("Court ").append(court.getName()).append(" has been booked at ");
 			message.append(hourOfDay).append(":00 on ");
 			
-			DateTime bookingTime = date.plusHours(hourOfDay);
+			DateTime bookingTime = beginningOfDay.plusHours(hourOfDay);
 			message.append(new SimpleDateFormat("EEE, MMM d").format(bookingTime.toDate()));
 		} else {
 			message.append("No courts available");
@@ -71,9 +75,10 @@ public class CommandLineView {
 		
 		// logout and print the message
 		controller.logout();
-		System.out.println(message);
+		return message.toString();
 	}
 
+	@Override
 	public void viewBookings() throws Exception {
 		// login
 		HtmlPage homePage = controller.login(username, password);

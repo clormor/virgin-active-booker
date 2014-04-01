@@ -211,8 +211,10 @@ public class VirginCLI implements Runnable {
 			courts.add(command.getOptionValue("court"));
 		}
 
-		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay,
+		String message = view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay,
 				courts, environments);
+		
+		System.out.println(message);
 	}
 
 	public void printHelpMessage() {
