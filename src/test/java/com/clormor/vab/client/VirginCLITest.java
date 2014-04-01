@@ -1,8 +1,8 @@
 package com.clormor.vab.client;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
@@ -45,7 +45,7 @@ public class VirginCLITest {
 	
 	@Test
 	public void defaultDate() throws Exception {
-		when(view.printAvailableCourts(any(DateTime.class))).thenReturn("");
+		when(view.printAvailableCourts(any(DateTime.class), anyListOf(Integer.class))).thenReturn("");
 		
 		String[] args = {"-u", "me", "-p", "whatever", "-l"};
 		VirginCLI cli = new TestCLI(args, view);
@@ -75,17 +75,17 @@ public class VirginCLITest {
 		String[] args2 = {"-u", "me", "-p", "whatever", "-list", "-h", "-t", "20"};
 		new VirginCLI(args2).run();
 		
-		verify(view, never()).printAvailableCourts(any(DateTime.class));
+		verify(view, never()).printAvailableCourts(any(DateTime.class), anyListOf(Integer.class));
 	}
 
 	@Test
 	public void listCallsList() throws ParseException, Exception {
-		when(view.printAvailableCourts(any(DateTime.class))).thenReturn("");
+		when(view.printAvailableCourts(any(DateTime.class), anyListOf(Integer.class))).thenReturn("");
 
 		String[] args = {"-u", "me", "-p", "whatever", "-l"};
 		new TestCLI(args, view).run();
 		
-		verify(view, times(1)).printAvailableCourts(any(DateTime.class));
+		verify(view, times(1)).printAvailableCourts(any(DateTime.class), anyListOf(Integer.class));
 	}
 	
 	@Test

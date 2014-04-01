@@ -1,5 +1,6 @@
 package com.clormor.vab.client;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,7 +187,20 @@ public class VirginCLI implements Runnable {
 	}
 
 	void listCourts() throws Exception {
-		String message = view.printAvailableCourts(DateTime.now().plusDays(getRelativeDate()));
+		DateTime listDate = DateTime.now().plusDays(getRelativeDate());
+		
+		int earliest = VirginConstants.EARLIEST_COURT_BOOKING_TIME;
+		int latest = VirginConstants.LATEST_COURT_BOOKING_TIME;
+		
+		List<Integer> selectedHoursOfDay = new ArrayList<Integer>();
+		for (int i = earliest ; i <= latest;) {
+			selectedHoursOfDay.add(i++);
+		}
+		
+		StringBuilder message = new StringBuilder();
+		message.append(new SimpleDateFormat("EEE, MMM d").format(listDate.toDate()));
+		message.append("\n--------------------------------\n");
+		message.append(view.printAvailableCourts(listDate, selectedHoursOfDay));
 		System.out.println(message);
 	}
 	
