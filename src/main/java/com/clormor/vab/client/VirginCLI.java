@@ -186,7 +186,8 @@ public class VirginCLI implements Runnable {
 	}
 
 	void listCourts() throws Exception {
-		view.printAvailableCourts(DateTime.now().plusDays(getRelativeDate()));
+		String message = view.printAvailableCourts(DateTime.now().plusDays(getRelativeDate()));
+		System.out.println(message);
 	}
 	
 	void viewBookings() throws Exception {

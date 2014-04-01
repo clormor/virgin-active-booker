@@ -26,7 +26,7 @@ public class CommandLineView implements ICommandLineView {
 	}
 
 	@Override
-	public void printAvailableCourts(DateTime date) throws Exception {
+	public String printAvailableCourts(DateTime date) throws Exception {
 		// login
 		HtmlPage homePage = controller.login(username, password);
 
@@ -45,7 +45,7 @@ public class CommandLineView implements ICommandLineView {
 
 		// logout and print the compiled message
 		controller.logout();
-		System.out.println(message);
+		return message.toString();
 	}
 
 	@Override

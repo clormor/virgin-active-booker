@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 
 public interface ICommandLineView {
 
-	void printAvailableCourts(DateTime date) throws Exception;
+	String printAvailableCourts(DateTime date) throws Exception;
 	
 	String bookCourts(DateTime date, int hourOfDay, List<String> courts, List<Boolean> environments) throws Exception;
 	

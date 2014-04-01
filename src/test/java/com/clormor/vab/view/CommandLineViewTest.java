@@ -55,4 +55,9 @@ public class CommandLineViewTest {
 		assertTrue(message.contains(expectedDate));
 		System.out.println(message);
 	}
+	
+	@Test
+	public void test_specific_time_booking() {
+		
+	}
 }
