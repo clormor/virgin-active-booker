@@ -8,6 +8,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.apache.commons.cli.ParseException;
 import org.joda.time.DateTime;
@@ -93,7 +94,7 @@ public class VirginCLITest {
 	
 	@Test
 	public void bookCallsBook() throws Exception {
-		doNothing().when(view).bookCourts(any(DateTime.class), anyInt(), anyListOf(String.class), anyListOf(Boolean.class));
+		when(view.bookCourts(any(DateTime.class), anyInt(), anyListOf(String.class), anyListOf(Boolean.class))).thenReturn("");
 		
 		String[] args = {"-u", "me", "-p", "whatever", "-book", "-t", "19"};
 		
