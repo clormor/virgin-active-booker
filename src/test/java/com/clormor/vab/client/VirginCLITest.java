@@ -45,7 +45,7 @@ public class VirginCLITest {
 	
 	@Test
 	public void defaultDate() throws Exception {
-		doNothing().when(view).printAvailableCourts(any(DateTime.class));
+		when(view.printAvailableCourts(any(DateTime.class))).thenReturn("");
 		
 		String[] args = {"-u", "me", "-p", "whatever", "-l"};
 		VirginCLI cli = new TestCLI(args, view);
@@ -80,7 +80,7 @@ public class VirginCLITest {
 
 	@Test
 	public void listCallsList() throws ParseException, Exception {
-		doNothing().when(view).printAvailableCourts(any(DateTime.class));;
+		when(view.printAvailableCourts(any(DateTime.class))).thenReturn("");
 
 		String[] args = {"-u", "me", "-p", "whatever", "-l"};
 		new TestCLI(args, view).run();
