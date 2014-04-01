@@ -278,12 +278,12 @@ public class HtmlUnitController implements IVirginController {
 	 * <p>Pauses execution until JavaScript processes complete, or throws a run-time exception if it times out.</p>
 	 */
 	private void waitForJavaScript() {
-		int maxTries = 10;
+		int maxTries = 60;
 		int processesStillExecuting = 1;
 		
 		while (processesStillExecuting > 0 & maxTries > 0) {
 			maxTries --;
-			processesStillExecuting = client.waitForBackgroundJavaScript(2000);
+			processesStillExecuting = client.waitForBackgroundJavaScript(1000);
 		}
 		
 		if (processesStillExecuting != 0) {
