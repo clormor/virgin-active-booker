@@ -92,8 +92,8 @@ public class VirginCLI implements Runnable {
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd = parser.parse(options, args);
 
-		// if help requested, ignore all other arguments
-		if (cmd.hasOption("help")) {
+		// if help requested (or no args), ignore all other arguments
+		if (cmd.getOptions().length == 0 || cmd.hasOption("help")) {
 			return cmd;
 		}
 
@@ -163,7 +163,7 @@ public class VirginCLI implements Runnable {
 	public void run() {
 
 		try {
-			if (command.hasOption("help")) {
+			if (command.getOptions().length == 0 || command.hasOption("help")) {
 				printHelpMessage();
 				return;
 			}

@@ -1,6 +1,8 @@
 package com.clormor.vab.client;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
@@ -27,12 +29,6 @@ public class VirginCLITest {
 	@Before
 	public void setup() throws Exception {
 		MockitoAnnotations.initMocks(this);
-	}
-	
-	@Test (expected = ParseException.class)
-	public void parseNoArgs() throws ParseException {
-		String[] args = {""};
-		new VirginCLI(args);
 	}
 	
 	@Test (expected = ParseException.class)
@@ -174,6 +170,20 @@ public class VirginCLITest {
 		new TestCLI(args, view).run();
 		
 		verify(view, times(1)).viewBookings();
+	}
+	
+	@Test
+	public void no_args_prints_help() throws Exception {
+		String[] args = {};
+		TestCLI testCli = null;
+		
+		try {
+			testCli = new TestCLI(args, view);
+		} catch (Exception e) {
+			assertTrue(e instanceof ParseException);
+			assertNotNull(testCli);
+			assertTrue(testCli.helpWasPrinted());
+		}
 	}
 }
 
