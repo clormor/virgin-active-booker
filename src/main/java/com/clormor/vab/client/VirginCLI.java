@@ -27,11 +27,6 @@ public class VirginCLI implements Runnable {
 			clientImpl = new VirginCLI(args);
 			clientImpl.run();
 		} catch (Exception e) {
-			if (clientImpl != null) {
-				clientImpl.printHelpMessage();
-			} else {
-				e.printStackTrace();
-			}
 			System.exit(1);
 		}
 
@@ -99,6 +94,7 @@ public class VirginCLI implements Runnable {
 		}
 		
 		if (!cmd.hasOption('u') || ! cmd.hasOption('p')) {
+			printHelpMessage();
 			throw new ParseException("Must specify username and password");
 		}
 
@@ -112,10 +108,12 @@ public class VirginCLI implements Runnable {
 		}
 		
 		if (requestedActions != 1) {
+			printHelpMessage();
 			throw new ParseException("Must specify one of view, list or book");
 		}
 
 		if (cmd.hasOption("book") && !cmd.hasOption("time")) {
+			printHelpMessage();
 			throw new ParseException("Must specify a time to book");
 		}
 
@@ -123,6 +121,7 @@ public class VirginCLI implements Runnable {
 			String court = cmd.getOptionValue("court");
 			if (court.length() > 1 || court.contains("-")
 					|| court.contains(",") || court.contains(" ")) {
+				printHelpMessage();
 				throw new ParseException(
 						"Specify a single court only e.g. 'a', 'B', or '5'");
 			}
@@ -133,12 +132,14 @@ public class VirginCLI implements Runnable {
 				int hourOfDay = Integer.parseInt(cmd.getOptionValue('t'));
 				if (hourOfDay < VirginConstants.EARLIEST_COURT_BOOKING_TIME
 						|| hourOfDay > VirginConstants.LATEST_COURT_BOOKING_TIME) {
+					printHelpMessage();
 					throw new ParseException("value for time must be between "
 							+ VirginConstants.EARLIEST_COURT_BOOKING_TIME
 							+ " and "
 							+ VirginConstants.LATEST_COURT_BOOKING_TIME);
 				}
 			} catch (NumberFormatException e) {
+				printHelpMessage();
 				throw new ParseException("value for time must be between "
 						+ VirginConstants.EARLIEST_COURT_BOOKING_TIME + " and "
 						+ VirginConstants.LATEST_COURT_BOOKING_TIME);
@@ -150,11 +151,13 @@ public class VirginCLI implements Runnable {
 			try {
 				int date = Integer.parseInt(cmd.getOptionValue('d'));
 				if (date < 0 || date > VirginConstants.MAX_BOOK_AHEAD_DAY) {
+					printHelpMessage();
 					throw new ParseException(
 							"value for date must be a number between 0 and "
 									+ VirginConstants.MAX_BOOK_AHEAD_DAY);
 				}
 			} catch (NumberFormatException e) {
+				printHelpMessage();
 				throw new ParseException(
 						"value for date must be a number between 0 and "
 								+ VirginConstants.MAX_BOOK_AHEAD_DAY);

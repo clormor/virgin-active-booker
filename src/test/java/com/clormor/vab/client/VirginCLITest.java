@@ -3,6 +3,7 @@ package com.clormor.vab.client;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -56,6 +57,45 @@ public class VirginCLITest {
 		assertEquals(cli.getRelativeDate(), 0);
 	}
 
+	@Test
+	public void test_normal_args() throws Exception {
+		// list calls list
+		when(
+				view.printAvailableCourts(any(DateTime.class),
+						anyListOf(Integer.class))).thenReturn("");
+
+		String[] args = { "-u", "me", "-p", "whatever", "-l" };
+		TestCLI testCli = new TestCLI(args, view);
+		testCli.run();
+
+		assertFalse(testCli.helpWasPrinted());
+		verify(view, times(1)).printAvailableCourts(any(DateTime.class),
+				anyListOf(Integer.class));
+
+		// book calls book
+		when(
+				view.bookCourts(any(DateTime.class), anyInt(),
+						anyListOf(String.class), anyListOf(Boolean.class)))
+				.thenReturn("");
+
+		String[] args2 = { "-u", "me", "-p", "whatever", "-book", "-t", "19" };
+
+		new TestCLI(args2, view).run();
+
+		assertFalse(testCli.helpWasPrinted());
+		verify(view, times(1)).bookCourts(any(DateTime.class), anyInt(),
+				anyListOf(String.class), anyListOf(Boolean.class));
+
+		// view calls view
+		doNothing().when(view).viewBookings();
+
+		String[] args3 = { "-u", "me", "-p", "whatever", "-v" };
+		new TestCLI(args3, view).run();
+
+		assertFalse(testCli.helpWasPrinted());
+		verify(view, times(1)).viewBookings();
+	}
+
 	@Test(expected = ParseException.class)
 	public void nonNumericDate() throws ParseException {
 		String[] args = { "-u", "me", "-p", "whatever", "-list", "-d", "blah" };
@@ -83,34 +123,6 @@ public class VirginCLITest {
 
 		verify(view, never()).printAvailableCourts(any(DateTime.class),
 				anyListOf(Integer.class));
-	}
-
-	@Test
-	public void listCallsList() throws ParseException, Exception {
-		when(
-				view.printAvailableCourts(any(DateTime.class),
-						anyListOf(Integer.class))).thenReturn("");
-
-		String[] args = { "-u", "me", "-p", "whatever", "-l" };
-		new TestCLI(args, view).run();
-
-		verify(view, times(1)).printAvailableCourts(any(DateTime.class),
-				anyListOf(Integer.class));
-	}
-
-	@Test
-	public void bookCallsBook() throws Exception {
-		when(
-				view.bookCourts(any(DateTime.class), anyInt(),
-						anyListOf(String.class), anyListOf(Boolean.class)))
-				.thenReturn("");
-
-		String[] args = { "-u", "me", "-p", "whatever", "-book", "-t", "19" };
-
-		new TestCLI(args, view).run();
-
-		verify(view, times(1)).bookCourts(any(DateTime.class), anyInt(),
-				anyListOf(String.class), anyListOf(Boolean.class));
 	}
 
 	@Test(expected = ParseException.class)
@@ -159,15 +171,6 @@ public class VirginCLITest {
 		new VirginCLI(args);
 	}
 
-	@Test
-	public void view() throws Exception {
-		String[] args = { "-u", "me", "-p", "whatever", "-view" };
-		new VirginCLI(args);
-
-		String[] args2 = { "-u", "me", "-p", "whatever", "-v" };
-		new VirginCLI(args2);
-	}
-
 	@Test(expected = ParseException.class)
 	public void viewAndBook() throws ParseException {
 		String[] args = { "-u", "me", "-p", "whatever", "-v", "-b", "-d", "2",
@@ -182,16 +185,6 @@ public class VirginCLITest {
 	}
 
 	@Test
-	public void viewCallsView() throws Exception {
-		doNothing().when(view).viewBookings();
-
-		String[] args = { "-u", "me", "-p", "whatever", "-v" };
-		new TestCLI(args, view).run();
-
-		verify(view, times(1)).viewBookings();
-	}
-
-	@Test
 	public void options_with_no_credentials_throws_error() throws Exception {
 
 		try {
@@ -201,7 +194,7 @@ public class VirginCLITest {
 		} catch (ParseException e) {
 			// expected
 		}
-		
+
 		try {
 			String[] args = { "-b", "-p", "blah" };
 			new TestCLI(args, view).run();
@@ -209,7 +202,7 @@ public class VirginCLITest {
 		} catch (ParseException e) {
 			// expected
 		}
-		
+
 		try {
 			String[] args = { "-l" };
 			new TestCLI(args, view).run();
