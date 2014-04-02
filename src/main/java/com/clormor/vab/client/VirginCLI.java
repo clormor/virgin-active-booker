@@ -188,13 +188,21 @@ public class VirginCLI implements Runnable {
 
 	void listCourts() throws Exception {
 		DateTime listDate = DateTime.now().plusDays(getRelativeDate());
-		
-		int earliest = VirginConstants.EARLIEST_COURT_BOOKING_TIME;
-		int latest = VirginConstants.LATEST_COURT_BOOKING_TIME;
+		// floor the date to the nearest day
+		listDate = listDate.dayOfMonth().roundFloorCopy();
 		
 		List<Integer> selectedHoursOfDay = new ArrayList<Integer>();
-		for (int i = earliest ; i <= latest;) {
-			selectedHoursOfDay.add(i++);
+		
+		if (command.hasOption("t")) {
+			int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
+			selectedHoursOfDay.add(hourOfDay);
+		} else {
+			int earliest = VirginConstants.EARLIEST_COURT_BOOKING_TIME;
+			int latest = VirginConstants.LATEST_COURT_BOOKING_TIME;
+		
+			for (int i = earliest ; i <= latest;) {
+				selectedHoursOfDay.add(i++);
+			}
 		}
 		
 		StringBuilder message = new StringBuilder();
