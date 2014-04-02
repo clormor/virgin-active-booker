@@ -8,7 +8,6 @@ import org.joda.time.DateTime;
 
 import com.clormor.vab.controller.HtmlUnitController;
 import com.clormor.vab.controller.IVirginController;
-import com.clormor.vab.model.VirginConstants;
 import com.clormor.vab.model.VirginCourtBooking;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -26,26 +25,22 @@ public class CommandLineView implements ICommandLineView {
 	}
 
 	@Override
-	public void printAvailableCourts(DateTime date) throws Exception {
+	public String printAvailableCourts(DateTime date, List<Integer> selectedHoursOfDay) throws Exception {
 		// login
 		HtmlPage homePage = controller.login(username, password);
 
 		// navigate to the court bookings page
 		controller.newCourtBooking(homePage, date);
 
-		// start building a message to print to the user
 		StringBuilder message = new StringBuilder();
-		message.append(new SimpleDateFormat("EEE, MMM d").format(date.toDate()));
-		message.append("\n--------------------------------\n");
-		
-		for (int hourOfDay = VirginConstants.EARLIEST_COURT_BOOKING_TIME; hourOfDay <= VirginConstants.LATEST_COURT_BOOKING_TIME; hourOfDay++) {
+		for(int hourOfDay : selectedHoursOfDay) {
 			// for each available time of day, print available courts
-			message.append(controller.printAvailableCourts(hourOfDay));
-		}
+			message.append(controller.printAvailableCourts(hourOfDay++));
+		};
 
 		// logout and print the compiled message
 		controller.logout();
-		System.out.println(message);
+		return message.toString();
 	}
 
 	@Override
