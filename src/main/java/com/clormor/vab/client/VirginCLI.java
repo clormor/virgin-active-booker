@@ -1,5 +1,6 @@
 package com.clormor.vab.client;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +27,6 @@ public class VirginCLI implements Runnable {
 			clientImpl = new VirginCLI(args);
 			clientImpl.run();
 		} catch (Exception e) {
-			if (clientImpl != null) {
-				clientImpl.printHelpMessage();
-			} else {
-				e.printStackTrace();
-			}
 			System.exit(1);
 		}
 
@@ -92,9 +88,14 @@ public class VirginCLI implements Runnable {
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd = parser.parse(options, args);
 
-		// if help requested, ignore all other arguments
-		if (cmd.hasOption("help")) {
+		// if help requested (or no args), ignore all other arguments
+		if (cmd.getOptions().length == 0 || cmd.hasOption("help")) {
 			return cmd;
+		}
+		
+		if (!cmd.hasOption('u') || ! cmd.hasOption('p')) {
+			printHelpMessage();
+			throw new ParseException("Must specify username and password");
 		}
 
 		// check only one of the required actions is requested
@@ -105,12 +106,14 @@ public class VirginCLI implements Runnable {
 				requestedActions++;
 			}
 		}
-
+		
 		if (requestedActions != 1) {
+			printHelpMessage();
 			throw new ParseException("Must specify one of view, list or book");
 		}
 
 		if (cmd.hasOption("book") && !cmd.hasOption("time")) {
+			printHelpMessage();
 			throw new ParseException("Must specify a time to book");
 		}
 
@@ -118,6 +121,7 @@ public class VirginCLI implements Runnable {
 			String court = cmd.getOptionValue("court");
 			if (court.length() > 1 || court.contains("-")
 					|| court.contains(",") || court.contains(" ")) {
+				printHelpMessage();
 				throw new ParseException(
 						"Specify a single court only e.g. 'a', 'B', or '5'");
 			}
@@ -128,12 +132,14 @@ public class VirginCLI implements Runnable {
 				int hourOfDay = Integer.parseInt(cmd.getOptionValue('t'));
 				if (hourOfDay < VirginConstants.EARLIEST_COURT_BOOKING_TIME
 						|| hourOfDay > VirginConstants.LATEST_COURT_BOOKING_TIME) {
+					printHelpMessage();
 					throw new ParseException("value for time must be between "
 							+ VirginConstants.EARLIEST_COURT_BOOKING_TIME
 							+ " and "
 							+ VirginConstants.LATEST_COURT_BOOKING_TIME);
 				}
 			} catch (NumberFormatException e) {
+				printHelpMessage();
 				throw new ParseException("value for time must be between "
 						+ VirginConstants.EARLIEST_COURT_BOOKING_TIME + " and "
 						+ VirginConstants.LATEST_COURT_BOOKING_TIME);
@@ -145,11 +151,13 @@ public class VirginCLI implements Runnable {
 			try {
 				int date = Integer.parseInt(cmd.getOptionValue('d'));
 				if (date < 0 || date > VirginConstants.MAX_BOOK_AHEAD_DAY) {
+					printHelpMessage();
 					throw new ParseException(
 							"value for date must be a number between 0 and "
 									+ VirginConstants.MAX_BOOK_AHEAD_DAY);
 				}
 			} catch (NumberFormatException e) {
+				printHelpMessage();
 				throw new ParseException(
 						"value for date must be a number between 0 and "
 								+ VirginConstants.MAX_BOOK_AHEAD_DAY);
@@ -163,7 +171,7 @@ public class VirginCLI implements Runnable {
 	public void run() {
 
 		try {
-			if (command.hasOption("help")) {
+			if (command.getOptions().length == 0 || command.hasOption("help")) {
 				printHelpMessage();
 				return;
 			}
@@ -186,7 +194,29 @@ public class VirginCLI implements Runnable {
 	}
 
 	void listCourts() throws Exception {
-		view.printAvailableCourts(DateTime.now().plusDays(getRelativeDate()));
+		DateTime listDate = DateTime.now().plusDays(getRelativeDate());
+		// floor the date to the nearest day
+		listDate = listDate.dayOfMonth().roundFloorCopy();
+		
+		List<Integer> selectedHoursOfDay = new ArrayList<Integer>();
+		
+		if (command.hasOption("t")) {
+			int hourOfDay = Integer.parseInt(command.getOptionValue('t'));
+			selectedHoursOfDay.add(hourOfDay);
+		} else {
+			int earliest = VirginConstants.EARLIEST_COURT_BOOKING_TIME;
+			int latest = VirginConstants.LATEST_COURT_BOOKING_TIME;
+		
+			for (int i = earliest ; i <= latest;) {
+				selectedHoursOfDay.add(i++);
+			}
+		}
+		
+		StringBuilder message = new StringBuilder();
+		message.append(new SimpleDateFormat("EEE, MMM d").format(listDate.toDate()));
+		message.append("\n--------------------------------\n");
+		message.append(view.printAvailableCourts(listDate, selectedHoursOfDay));
+		System.out.println(message);
 	}
 	
 	void viewBookings() throws Exception {
@@ -211,8 +241,10 @@ public class VirginCLI implements Runnable {
 			courts.add(command.getOptionValue("court"));
 		}
 
-		view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay,
+		String message = view.bookCourts(DateTime.now().plusDays(getRelativeDate()), hourOfDay,
 				courts, environments);
+		
+		System.out.println(message);
 	}
 
 	public void printHelpMessage() {

@@ -22,6 +22,5 @@ public interface IVirginController {
 	
 	HtmlPage myBookings(final HtmlPage currentPage) throws Exception;
 
-	List<VirginCourtBooking> getAllBookings(
-			HtmlPage myBookingsPage);
+	List<VirginCourtBooking> getAllBookings(HtmlPage myBookingsPage);
 }
