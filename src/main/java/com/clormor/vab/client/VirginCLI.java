@@ -97,6 +97,10 @@ public class VirginCLI implements Runnable {
 		if (cmd.getOptions().length == 0 || cmd.hasOption("help")) {
 			return cmd;
 		}
+		
+		if (!cmd.hasOption('u') || ! cmd.hasOption('p')) {
+			throw new ParseException("Must specify username and password");
+		}
 
 		// check only one of the required actions is requested
 		int requestedActions = 0;
@@ -106,7 +110,7 @@ public class VirginCLI implements Runnable {
 				requestedActions++;
 			}
 		}
-
+		
 		if (requestedActions != 1) {
 			throw new ParseException("Must specify one of view, list or book");
 		}
