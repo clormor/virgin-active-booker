@@ -161,7 +161,7 @@ public class HtmlUnitController implements IVirginController {
 
 		HtmlSubmitInput confirmButton = currentPage
 				.getElementByName("rpProceed_b");
-//		currentPage = confirmButton.click();
+		currentPage = confirmButton.click();
 		return result;
 	}
 
