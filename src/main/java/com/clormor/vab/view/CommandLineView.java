@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 
 import com.clormor.vab.controller.HtmlUnitController;
 import com.clormor.vab.controller.IVirginController;
+import com.clormor.vab.model.VirginConstants;
 import com.clormor.vab.model.VirginCourtBooking;
 import com.clormor.vab.model.VirginTennisCourt;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -48,7 +49,8 @@ public class CommandLineView implements ICommandLineView {
 		// login
 		HtmlPage homePage = controller.login(username, password);
 		
-		DateTime beginningOfDay = date.dayOfMonth().roundFloorCopy();
+		DateTime bookingDate = new DateTime(date, VirginConstants.UK_TIME_ZONE);
+		DateTime beginningOfDay = bookingDate.dayOfMonth().roundFloorCopy();
 
 		// navigate to the court bookings page
 		controller.newCourtBooking(homePage, beginningOfDay);
@@ -61,9 +63,7 @@ public class CommandLineView implements ICommandLineView {
 		if (court != null) {
 			message.append("Court ").append(court.getName()).append(" has been booked at ");
 			message.append(hourOfDay).append(":00 on ");
-			
-			DateTime bookingTime = beginningOfDay.plusHours(hourOfDay);
-			message.append(new SimpleDateFormat("EEE, MMM d").format(bookingTime.toDate()));
+			message.append(VirginConstants.DATE_FORMATTER.print(bookingDate));
 		} else {
 			message.append("No courts available");
 		}

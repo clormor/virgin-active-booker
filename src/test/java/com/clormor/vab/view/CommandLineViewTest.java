@@ -11,12 +11,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -45,7 +45,7 @@ public class CommandLineViewTest {
 
 	@Test
 	public void test_date_rounded_correctly() throws Exception {
-		DateTime now = DateTime.now();
+		DateTime now = DateTime.now(VirginConstants.UK_TIME_ZONE);
 
 		when(mockController.login(anyString(), anyString())).thenReturn(mockPage);
 		DateTime justBeforeMidnight = now.dayOfMonth().roundCeilingCopy()
@@ -57,7 +57,28 @@ public class CommandLineViewTest {
 		String message = testView.bookCourts(justBeforeMidnight, 11, null, null);
 		assertNotNull(message);
 		
-		String expectedDate = new SimpleDateFormat("EEE, MMM d").format(now.toDate());
+		String expectedDate = VirginConstants.DATE_FORMATTER.print(now);
+		assertTrue(message.contains(expectedDate));
+	}
+	
+	@Test
+	public void print_correct_date_in_different_timezone() throws Exception {
+		DateTimeZone westCoast = DateTimeZone.forID("America/Los_Angeles");
+		
+		// set local time so that it is 1 day behind UK time
+		DateTime yesterday = new DateTime(DateTime.now(westCoast));
+		yesterday = yesterday.minusDays(1);
+		yesterday = yesterday.dayOfMonth().roundCeilingCopy().minusHours(5);
+		DateTime todayInUkTime = new DateTime(yesterday, VirginConstants.UK_TIME_ZONE);
+
+		when(mockController.login(anyString(), anyString())).thenReturn(mockPage);
+		doNothing().when(mockController).newCourtBooking(any(HtmlPage.class),any(DateTime.class));
+		when(mockController.bookCourt(anyInt(), anyListOf(String.class), anyListOf(Boolean.class))).thenReturn(VirginTennisCourt.COURT_1);
+		
+		String message = testView.bookCourts(yesterday, 21, null, null);
+		assertNotNull(message);
+		
+		String expectedDate = VirginConstants.DATE_FORMATTER.print(todayInUkTime);
 		assertTrue(message.contains(expectedDate));
 	}
 
